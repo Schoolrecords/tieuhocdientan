@@ -527,7 +527,10 @@
     <span class="kicker">Hệ thống hồ sơ điện tử</span>
     <h2>Danh mục Hồ sơ số</h2>
     <p style="color:#5a6b64">Toàn bộ <b id="recCount">108</b> hồ sơ được tổ chức thành 11 nhóm chức năng, đồng bộ trực tiếp từ Google Sheet. Click vào thẻ để xem chi tiết và mở hồ sơ trên Google Drive.</p>
-    <div style="margin-top:16px"><button class="btn btn-primary" style="background:var(--g2);color:white;font-size:.88rem;padding:12px 24px" onclick="openCatalogOverview()">📋 Tổng quan Danh mục HSS</button></div>
+    <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap">
+      <button class="btn btn-primary" style="background:var(--g2);color:white;font-size:.88rem;padding:12px 24px" onclick="openCatalogOverview()">📋 Tổng quan Danh mục HSS</button>
+      <button class="btn btn-primary" style="background:var(--g-deep);color:white;font-size:.88rem;padding:12px 24px" onclick="openMCOverview()">🎗️ Bảng mã hóa MC KĐCL</button>
+    </div>
   </div>
   <div class="records-search"><input type="text" id="recSearch" placeholder="Tìm kiếm theo tên hoặc mã hồ sơ (VD: 1.2.1, thi đua, kế hoạch...)"></div>
   <div class="cat-grid" id="catGrid"></div>
@@ -710,6 +713,7 @@
       <div class="admin-tabs">
         <button class="admin-tab active" data-tab="info" onclick="admTab('info')">🏫 Thông tin</button>
         <button class="admin-tab" data-tab="hss" onclick="admTab('hss')">📋 Hồ sơ số</button>
+        <button class="admin-tab" data-tab="mc" onclick="admTab('mc')">🎗️ Minh chứng</button>
         <button class="admin-tab" data-tab="import" onclick="admTab('import')">📤 Nhập dữ liệu</button>
         <button class="admin-tab" data-tab="pwd" onclick="admTab('pwd')">🔑 Mật khẩu</button>
       </div>
@@ -797,7 +801,31 @@
           </div>
         </div>
 
-        <!-- Tab 3: Nhập dữ liệu GV & HS -->
+        <!-- Tab 3: Minh chứng KĐCL -->
+        <div class="admin-section" id="admSecMc">
+          <div id="admMcMsg" class="adm-alert"></div>
+          <p style="font-size:.82rem;color:#6b7a72;margin-bottom:14px">Thêm/sửa/xóa minh chứng KĐCL. Dữ liệu lưu trong Sheet tab <b>"MinhChung"</b>.</p>
+          <div style="background:#f7fbf8;border:1px solid #e0e6e2;border-radius:12px;padding:14px 16px;margin-bottom:14px;display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap">
+            <div style="flex:0 0 70px"><label style="font-size:.68rem;font-weight:600;color:#6b7a72;text-transform:uppercase;display:block;margin-bottom:4px">Tiêu chí</label><input type="text" id="admMcTchi" placeholder="1.1" style="width:100%;padding:7px 8px;border:1px solid #d8e0dc;border-radius:8px;font-size:.82rem;font-family:inherit"></div>
+            <div style="flex:0 0 90px"><label style="font-size:.68rem;font-weight:600;color:#6b7a72;text-transform:uppercase;display:block;margin-bottom:4px">Mã MC</label><input type="text" id="admMcCode" placeholder="[1.1-01]" style="width:100%;padding:7px 8px;border:1px solid #d8e0dc;border-radius:8px;font-size:.82rem;font-family:inherit"></div>
+            <div style="flex:1;min-width:140px"><label style="font-size:.68rem;font-weight:600;color:#6b7a72;text-transform:uppercase;display:block;margin-bottom:4px">Tên minh chứng</label><input type="text" id="admMcName" placeholder="Tên minh chứng..." style="width:100%;padding:7px 8px;border:1px solid #d8e0dc;border-radius:8px;font-size:.82rem;font-family:inherit"></div>
+            <div style="flex:0 0 80px"><label style="font-size:.68rem;font-weight:600;color:#6b7a72;text-transform:uppercase;display:block;margin-bottom:4px">Mã HSS</label><input type="text" id="admMcHss" placeholder="1.1.2" style="width:100%;padding:7px 8px;border:1px solid #d8e0dc;border-radius:8px;font-size:.82rem;font-family:inherit"></div>
+            <button class="adm-btn adm-btn-primary" style="padding:8px 16px;font-size:.82rem;white-space:nowrap" onclick="admAddMC()">＋ Thêm</button>
+          </div>
+          <div class="adm-field" style="margin-bottom:10px">
+            <input type="text" id="admMcSearch" placeholder="🔍 Tìm nhanh theo mã, tên hoặc tiêu chí..." oninput="admFilterMC()">
+          </div>
+          <div class="adm-edit-wrap" id="admMcTable" style="max-height:350px">
+            <p style="padding:30px;text-align:center;color:#8a9690;font-size:.85rem">Đang tải minh chứng...</p>
+          </div>
+          <div class="adm-actions">
+            <button class="adm-btn adm-btn-primary" onclick="admSaveMC()">💾 Lưu thay đổi</button>
+            <button class="adm-btn adm-btn-outline" onclick="admRefresh()">🔄 Làm mới</button>
+            <button class="adm-btn adm-btn-outline" onclick="exportMCExcel()">📥 Xuất Excel</button>
+          </div>
+        </div>
+
+        <!-- Tab 4: Nhập dữ liệu GV & HS -->
         <div class="admin-section" id="admSecImport">
           <div id="admImportMsg" class="adm-alert"></div>
 
@@ -861,6 +889,30 @@
   </div>
 </div>
 
+<!-- ===== BẢNG MÃ HÓA MINH CHỨNG KĐCL ===== -->
+<div class="admin-overlay" id="mcOverlay" onclick="if(event.target===this)closeMCOverview()" style="display:none">
+  <div style="background:white;border-radius:24px;width:96%;max-width:1200px;max-height:94vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,.35)">
+    <div style="background:linear-gradient(135deg,#a08838,#1e6b54);color:white;padding:20px 28px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
+      <div>
+        <h3 style="font-family:'Fraunces',serif;font-size:1.15rem;display:flex;align-items:center;gap:10px;margin-bottom:4px">🎗️ Bảng mã hóa Minh chứng KĐCL</h3>
+        <span style="font-size:.78rem;opacity:.8">Theo TT 17/2018 + TT 22/2024 · CV 5932/BGDĐT-QLCL</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button onclick="exportMCExcel()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:12px;color:white;padding:8px 16px;font-size:.82rem;cursor:pointer;font-family:inherit;backdrop-filter:blur(6px)">📥 Xuất Excel</button>
+        <button onclick="closeMCOverview()" style="background:rgba(255,255,255,.15);border:none;border-radius:50%;width:36px;height:36px;color:white;font-size:1.1rem;cursor:pointer">✕</button>
+      </div>
+    </div>
+    <div style="padding:14px 24px 6px;background:#fafbf8;border-bottom:1px solid #eef2ef;flex-shrink:0;display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+      <span style="font-family:'Fraunces',serif;font-weight:600;color:var(--g-deep);font-size:.92rem" id="mcOvCount">95 minh chứng · 5 tiêu chuẩn · 17 tiêu chí</span>
+      <input type="text" id="mcOvSearch" placeholder="🔍 Tìm theo mã, tên, tiêu chí..." oninput="filterMCOverview()" style="flex:1;min-width:180px;padding:9px 16px;border-radius:12px;border:1px solid #d8e0dc;font-family:inherit;font-size:.88rem;outline:none">
+    </div>
+    <div id="mcBody" style="flex:1;overflow-y:auto;padding:16px 24px"></div>
+    <div style="padding:10px 24px;border-top:1px solid #eef2ef;text-align:center;font-size:.76rem;color:#8a9690;flex-shrink:0">
+      Click vào mã MC để nhảy đến hồ sơ tương ứng · Thiết kế: Chung Trần
+    </div>
+  </div>
+</div>
+
 <!-- ===== TỔNG QUAN DANH MỤC HSS ===== -->
 <div class="admin-overlay" id="catalogOverlay" onclick="if(event.target===this)closeCatalogOverview()" style="display:none">
   <div style="background:white;border-radius:24px;width:96%;max-width:1100px;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,.35)">
@@ -904,7 +956,104 @@
   const API_URL = 'https://script.google.com/macros/s/AKfycbywIqNiIVd89LRum_M_8qbWZy4WugsfQHneIwm3rV1E2ZTKZw8zO1hB7larpW_679XJ/exec';
 
   // ============ STATE ============
-  let HSS = [], TEACHERS = [], CLASSES = [], IMAGES = [], STATS = {};
+  const DEFAULT_MC = [
+  {stt:1,tc:"TC1",tchi:"1.1",code:"[1.1-01]",name:"KH chiến lược phát triển nhà trường",issued:"",issuer:"",hssCode:"1.1.2",link:"",note:""},
+  {stt:2,tc:"TC1",tchi:"1.1",code:"[1.1-02]",name:"KH giáo dục nhà trường hàng năm",issued:"",issuer:"",hssCode:"1.1.1",link:"",note:""},
+  {stt:3,tc:"TC1",tchi:"1.1",code:"[1.1-03]",name:"NQ Đại hội Đảng bộ/Chi bộ về phát triển NT",issued:"",issuer:"",hssCode:"6.1",link:"",note:""},
+  {stt:4,tc:"TC1",tchi:"1.1",code:"[1.1-04]",name:"NQ Hội đồng trường về chiến lược phát triển",issued:"",issuer:"",hssCode:"1.2.1",link:"",note:""},
+  {stt:5,tc:"TC1",tchi:"1.1",code:"[1.1-05]",name:"BB rà soát chiến lược phát triển NT",issued:"",issuer:"",hssCode:"1.10.1",link:"",note:""},
+  {stt:6,tc:"TC1",tchi:"1.1",code:"[1.1-06]",name:"KH duy trì XD trường chuẩn Quốc gia",issued:"",issuer:"",hssCode:"1.1.3",link:"",note:""},
+  {stt:7,tc:"TC1",tchi:"1.1",code:"[1.1-07]",name:"BC tiến độ XD trường chuẩn Quốc gia",issued:"",issuer:"",hssCode:"1.10.3",link:"",note:""},
+  {stt:8,tc:"TC1",tchi:"1.1",code:"[1.1-08]",name:"BB họp HĐ trường, hội nghị VC-NLĐ",issued:"",issuer:"",hssCode:"1.7.3",link:"",note:""},
+  {stt:9,tc:"TC1",tchi:"1.1",code:"[1.1-09]",name:"BC sơ kết, tổng kết năm học",issued:"",issuer:"",hssCode:"1.10.1",link:"",note:""},
+  {stt:10,tc:"TC1",tchi:"1.2",code:"[1.2-01]",name:"QĐ thành lập Hội đồng trường",issued:"",issuer:"",hssCode:"1.4.2",link:"",note:""},
+  {stt:11,tc:"TC1",tchi:"1.2",code:"[1.2-02]",name:"QĐ thành lập HĐ TĐ-KT",issued:"",issuer:"",hssCode:"1.4.2",link:"",note:""},
+  {stt:12,tc:"TC1",tchi:"1.2",code:"[1.2-03]",name:"QĐ thành lập HĐ chấm SKKN",issued:"",issuer:"",hssCode:"1.4.2",link:"",note:""},
+  {stt:13,tc:"TC1",tchi:"1.2",code:"[1.2-04]",name:"NQ của Hội đồng trường",issued:"",issuer:"",hssCode:"1.2.2",link:"",note:""},
+  {stt:14,tc:"TC1",tchi:"1.2",code:"[1.2-05]",name:"BB họp các Hội đồng",issued:"",issuer:"",hssCode:"1.7.3",link:"",note:""},
+  {stt:15,tc:"TC1",tchi:"1.2",code:"[1.2-06]",name:"QC hoạt động Hội đồng trường",issued:"",issuer:"",hssCode:"1.3.3",link:"",note:""},
+  {stt:16,tc:"TC1",tchi:"1.3",code:"[1.3-01]",name:"NQ Chi bộ các tháng, năm",issued:"",issuer:"",hssCode:"6.1",link:"",note:""},
+  {stt:17,tc:"TC1",tchi:"1.3",code:"[1.3-02]",name:"BB họp Chi ủy, Chi bộ",issued:"",issuer:"",hssCode:"6.3",link:"",note:""},
+  {stt:18,tc:"TC1",tchi:"1.3",code:"[1.3-03]",name:"BC hoạt động Chi bộ",issued:"",issuer:"",hssCode:"6.4",link:"",note:""},
+  {stt:19,tc:"TC1",tchi:"1.3",code:"[1.3-04]",name:"KH hoạt động Công đoàn",issued:"",issuer:"",hssCode:"1.7.1",link:"",note:""},
+  {stt:20,tc:"TC1",tchi:"1.3",code:"[1.3-05]",name:"KH hoạt động Đội, Sao nhi đồng",issued:"",issuer:"",hssCode:"7.1",link:"",note:""},
+  {stt:21,tc:"TC1",tchi:"1.3",code:"[1.3-06]",name:"BB, BC hoạt động Đội",issued:"",issuer:"",hssCode:"7.2",link:"",note:""},
+  {stt:22,tc:"TC1",tchi:"1.4",code:"[1.4-01]",name:"QĐ bổ nhiệm HT, PHT",issued:"",issuer:"",hssCode:"1.4.1",link:"",note:""},
+  {stt:23,tc:"TC1",tchi:"1.4",code:"[1.4-02]",name:"QĐ thành lập Tổ CM, Tổ VP",issued:"",issuer:"",hssCode:"1.7.1",link:"",note:""},
+  {stt:24,tc:"TC1",tchi:"1.4",code:"[1.4-03]",name:"QĐ phân công nhiệm vụ CB, GV, NV",issued:"",issuer:"",hssCode:"1.4.1",link:"",note:""},
+  {stt:25,tc:"TC1",tchi:"1.4",code:"[1.4-04]",name:"Sơ đồ tổ chức nhà trường",issued:"",issuer:"",hssCode:"1.7.1",link:"",note:""},
+  {stt:26,tc:"TC1",tchi:"1.4",code:"[1.4-05]",name:"KH & BB sinh hoạt chuyên môn",issued:"",issuer:"",hssCode:"3.2.1",link:"",note:""},
+  {stt:27,tc:"TC1",tchi:"1.4",code:"[1.4-06]",name:"Sổ ghi chép hoạt động Tổ CM",issued:"",issuer:"",hssCode:"3.2.3",link:"",note:""},
+  {stt:28,tc:"TC1",tchi:"1.5",code:"[1.5-01]",name:"KH bồi dưỡng CMNV cho CB, GV, NV",issued:"",issuer:"",hssCode:"2.2.2",link:"",note:""},
+  {stt:29,tc:"TC1",tchi:"1.5",code:"[1.5-02]",name:"Hồ sơ phát động thi đua",issued:"",issuer:"",hssCode:"1.8.1",link:"",note:""},
+  {stt:30,tc:"TC1",tchi:"1.5",code:"[1.5-03]",name:"Hồ sơ xét khen thưởng GV, NV",issued:"",issuer:"",hssCode:"1.8.2",link:"",note:""},
+  {stt:31,tc:"TC1",tchi:"1.5",code:"[1.5-04]",name:"Hồ sơ SKKN",issued:"",issuer:"",hssCode:"1.8.4",link:"",note:""},
+  {stt:32,tc:"TC1",tchi:"1.5",code:"[1.5-05]",name:"QC TĐ-KT nội bộ",issued:"",issuer:"",hssCode:"1.3.2",link:"",note:""},
+  {stt:33,tc:"TC1",tchi:"1.5",code:"[1.5-06]",name:"KH kiểm tra nội bộ",issued:"",issuer:"",hssCode:"2.6.2",link:"",note:""},
+  {stt:34,tc:"TC1",tchi:"1.6",code:"[1.6-01]",name:"Sổ VB đến, VB đi",issued:"",issuer:"",hssCode:"4.1.1",link:"",note:""},
+  {stt:35,tc:"TC1",tchi:"1.6",code:"[1.6-02]",name:"QC chi tiêu nội bộ",issued:"",issuer:"",hssCode:"1.3.1",link:"",note:""},
+  {stt:36,tc:"TC1",tchi:"1.6",code:"[1.6-03]",name:"Công khai tài chính",issued:"",issuer:"",hssCode:"1.5.2",link:"",note:""},
+  {stt:37,tc:"TC1",tchi:"1.6",code:"[1.6-04]",name:"Dự toán, báo cáo quyết toán",issued:"",issuer:"",hssCode:"5.5",link:"",note:""},
+  {stt:38,tc:"TC1",tchi:"1.6",code:"[1.6-05]",name:"Sổ TSCĐ, sổ CC-DC",issued:"",issuer:"",hssCode:"1.6.2",link:"",note:""},
+  {stt:39,tc:"TC1",tchi:"1.6",code:"[1.6-06]",name:"BB kiểm kê tài sản",issued:"",issuer:"",hssCode:"1.6.4",link:"",note:""},
+  {stt:40,tc:"TC1",tchi:"1.6",code:"[1.6-07]",name:"QC dân chủ cơ sở",issued:"",issuer:"",hssCode:"1.3.1",link:"",note:""},
+  {stt:41,tc:"TC1",tchi:"1.6",code:"[1.6-08]",name:"Hồ sơ công khai theo TT36",issued:"",issuer:"",hssCode:"1.5.2",link:"",note:""},
+  {stt:42,tc:"TC2",tchi:"2.1",code:"[2.1-01]",name:"DS trích ngang CBGV-NV",issued:"",issuer:"",hssCode:"9.1.1",link:"",note:""},
+  {stt:43,tc:"TC2",tchi:"2.1",code:"[2.1-02]",name:"Hồ sơ viên chức & HĐLĐ",issued:"",issuer:"",hssCode:"1.7.2",link:"",note:""},
+  {stt:44,tc:"TC2",tchi:"2.1",code:"[2.1-03]",name:"Bảng tổng hợp trình độ GV",issued:"",issuer:"",hssCode:"9.1.1",link:"",note:""},
+  {stt:45,tc:"TC2",tchi:"2.1",code:"[2.1-04]",name:"BC thống kê đội ngũ",issued:"",issuer:"",hssCode:"1.10.2",link:"",note:""},
+  {stt:46,tc:"TC2",tchi:"2.2",code:"[2.2-01]",name:"KH bồi dưỡng thường xuyên",issued:"",issuer:"",hssCode:"2.2.2",link:"",note:""},
+  {stt:47,tc:"TC2",tchi:"2.2",code:"[2.2-02]",name:"Hồ sơ BDTX theo module",issued:"",issuer:"",hssCode:"9.1.3",link:"",note:""},
+  {stt:48,tc:"TC2",tchi:"2.2",code:"[2.2-03]",name:"Chứng chỉ, chứng nhận bồi dưỡng",issued:"",issuer:"",hssCode:"9.1.1",link:"",note:""},
+  {stt:49,tc:"TC2",tchi:"2.2",code:"[2.2-04]",name:"KH đào tạo nâng chuẩn GV",issued:"",issuer:"",hssCode:"2.2.2",link:"",note:""},
+  {stt:50,tc:"TC2",tchi:"2.3",code:"[2.3-01]",name:"Đánh giá CNN GV theo NĐ90",issued:"",issuer:"",hssCode:"9.1.2",link:"",note:""},
+  {stt:51,tc:"TC2",tchi:"2.3",code:"[2.3-02]",name:"Sổ dự giờ",issued:"",issuer:"",hssCode:"9.1.4",link:"",note:""},
+  {stt:52,tc:"TC2",tchi:"2.3",code:"[2.3-03]",name:"Hồ sơ thi GV dạy giỏi",issued:"",issuer:"",hssCode:"1.8.2",link:"",note:""},
+  {stt:53,tc:"TC2",tchi:"2.3",code:"[2.3-04]",name:"Kế hoạch bài dạy",issued:"",issuer:"",hssCode:"9.1.4",link:"",note:""},
+  {stt:54,tc:"TC2",tchi:"2.3",code:"[2.3-05]",name:"Hồ sơ SHCM theo NCBH",issued:"",issuer:"",hssCode:"3.2.1",link:"",note:""},
+  {stt:55,tc:"TC3",tchi:"3.1",code:"[3.1-01]",name:"Hồ sơ đất đai, XDCB",issued:"",issuer:"",hssCode:"1.6.1",link:"",note:""},
+  {stt:56,tc:"TC3",tchi:"3.1",code:"[3.1-02]",name:"Sơ đồ tổng thể khuôn viên NT",issued:"",issuer:"",hssCode:"1.6.1",link:"",note:""},
+  {stt:57,tc:"TC3",tchi:"3.1",code:"[3.1-03]",name:"KH mua sắm, sửa chữa CSVC",issued:"",issuer:"",hssCode:"1.5.3",link:"",note:""},
+  {stt:58,tc:"TC3",tchi:"3.1",code:"[3.1-04]",name:"BB kiểm tra CSVC, ANTH",issued:"",issuer:"",hssCode:"1.9.1",link:"",note:""},
+  {stt:59,tc:"TC3",tchi:"3.2",code:"[3.2-01]",name:"Danh mục phòng học, phòng CN",issued:"",issuer:"",hssCode:"1.6.2",link:"",note:""},
+  {stt:60,tc:"TC3",tchi:"3.2",code:"[3.2-02]",name:"BB bàn giao, cấp phát CSVC",issued:"",issuer:"",hssCode:"1.6.3",link:"",note:""},
+  {stt:61,tc:"TC3",tchi:"3.2",code:"[3.2-03]",name:"Hồ sơ PCCC, ANTH",issued:"",issuer:"",hssCode:"1.9.1",link:"",note:""},
+  {stt:62,tc:"TC3",tchi:"3.3",code:"[3.3-01]",name:"Hồ sơ thư viện, sổ sách TV",issued:"",issuer:"",hssCode:"4.2.1",link:"",note:""},
+  {stt:63,tc:"TC3",tchi:"3.3",code:"[3.3-02]",name:"Hồ sơ văn hóa đọc",issued:"",issuer:"",hssCode:"4.2.2",link:"",note:""},
+  {stt:64,tc:"TC3",tchi:"3.3",code:"[3.3-03]",name:"Danh mục TB dạy học, sổ mượn-trả",issued:"",issuer:"",hssCode:"4.3.1",link:"",note:""},
+  {stt:65,tc:"TC3",tchi:"3.3",code:"[3.3-04]",name:"KH mua sắm thiết bị",issued:"",issuer:"",hssCode:"4.3.2",link:"",note:""},
+  {stt:66,tc:"TC3",tchi:"3.3",code:"[3.3-05]",name:"Hồ sơ ứng dụng CNTT",issued:"",issuer:"",hssCode:"3.3.3",link:"",note:""},
+  {stt:67,tc:"TC4",tchi:"4.1",code:"[4.1-01]",name:"QĐ, QC Ban ĐDCMHS",issued:"",issuer:"",hssCode:"8.1.1",link:"",note:""},
+  {stt:68,tc:"TC4",tchi:"4.1",code:"[4.1-02]",name:"BB họp Ban ĐDCMHS",issued:"",issuer:"",hssCode:"8.1.2",link:"",note:""},
+  {stt:69,tc:"TC4",tchi:"4.1",code:"[4.1-03]",name:"KH phối hợp NT-GĐ",issued:"",issuer:"",hssCode:"8.1.2",link:"",note:""},
+  {stt:70,tc:"TC4",tchi:"4.2",code:"[4.2-01]",name:"Hồ sơ phối hợp ANTT, ATGT",issued:"",issuer:"",hssCode:"1.9.1",link:"",note:""},
+  {stt:71,tc:"TC4",tchi:"4.2",code:"[4.2-02]",name:"Hồ sơ phối hợp Y tế",issued:"",issuer:"",hssCode:"1.9.2",link:"",note:""},
+  {stt:72,tc:"TC4",tchi:"4.2",code:"[4.2-03]",name:"Hồ sơ phối hợp GD truyền thống",issued:"",issuer:"",hssCode:"1.9.3",link:"",note:""},
+  {stt:73,tc:"TC4",tchi:"4.2",code:"[4.2-04]",name:"Hồ sơ vận động XHH giáo dục",issued:"",issuer:"",hssCode:"1.9.3",link:"",note:""},
+  {stt:74,tc:"TC4",tchi:"4.2",code:"[4.2-05]",name:"Hồ sơ tham mưu cấp ủy, chính quyền",issued:"",issuer:"",hssCode:"1.9.3",link:"",note:""},
+  {stt:75,tc:"TC5",tchi:"5.1",code:"[5.1-01]",name:"KH dạy học theo CTGDPT 2018",issued:"",issuer:"",hssCode:"2.2.1",link:"",note:""},
+  {stt:76,tc:"TC5",tchi:"5.1",code:"[5.1-02]",name:"Thời khóa biểu, PC chuyên môn",issued:"",issuer:"",hssCode:"2.3.1",link:"",note:""},
+  {stt:77,tc:"TC5",tchi:"5.1",code:"[5.1-03]",name:"Sổ đăng bộ, học bạ HS",issued:"",issuer:"",hssCode:"2.1.1",link:"",note:""},
+  {stt:78,tc:"TC5",tchi:"5.1",code:"[5.1-04]",name:"KH môn học các khối",issued:"",issuer:"",hssCode:"3.1.1",link:"",note:""},
+  {stt:79,tc:"TC5",tchi:"5.1",code:"[5.1-05]",name:"Ma trận, đề KT định kỳ",issued:"",issuer:"",hssCode:"2.4.1",link:"",note:""},
+  {stt:80,tc:"TC5",tchi:"5.1",code:"[5.1-06]",name:"Tổng hợp KQGD",issued:"",issuer:"",hssCode:"2.4.2",link:"",note:""},
+  {stt:81,tc:"TC5",tchi:"5.1",code:"[5.1-07]",name:"Sổ Chủ nhiệm",issued:"",issuer:"",hssCode:"9.2.1",link:"",note:""},
+  {stt:82,tc:"TC5",tchi:"5.2",code:"[5.2-01]",name:"KH trải nghiệm, STEM, HĐNGLL",issued:"",issuer:"",hssCode:"2.2.3",link:"",note:""},
+  {stt:83,tc:"TC5",tchi:"5.2",code:"[5.2-02]",name:"KH GD địa phương",issued:"",issuer:"",hssCode:"2.2.5",link:"",note:""},
+  {stt:84,tc:"TC5",tchi:"5.2",code:"[5.2-03]",name:"Hình ảnh hoạt động NGLL",issued:"",issuer:"",hssCode:"7.3",link:"",note:""},
+  {stt:85,tc:"TC5",tchi:"5.2",code:"[5.2-04]",name:"Hồ sơ đổi mới PP, ứng dụng CNTT",issued:"",issuer:"",hssCode:"3.3.3",link:"",note:""},
+  {stt:86,tc:"TC5",tchi:"5.3",code:"[5.3-01]",name:"Tổng hợp KQ đánh giá HS",issued:"",issuer:"",hssCode:"2.4.2",link:"",note:""},
+  {stt:87,tc:"TC5",tchi:"5.3",code:"[5.3-02]",name:"DS khen thưởng HS",issued:"",issuer:"",hssCode:"2.4.3",link:"",note:""},
+  {stt:88,tc:"TC5",tchi:"5.3",code:"[5.3-03]",name:"Hồ sơ Hội thi HS giỏi",issued:"",issuer:"",hssCode:"2.4.2",link:"",note:""},
+  {stt:89,tc:"TC5",tchi:"5.3",code:"[5.3-04]",name:"KH phụ đạo HS chưa đạt, BD năng khiếu",issued:"",issuer:"",hssCode:"2.2.4",link:"",note:""},
+  {stt:90,tc:"TC5",tchi:"5.3",code:"[5.3-05]",name:"KH-VB Y tế, theo dõi SK HS",issued:"",issuer:"",hssCode:"4.4.1",link:"",note:""},
+  {stt:91,tc:"TC5",tchi:"5.4",code:"[5.4-01]",name:"VB chỉ đạo PCGD",issued:"",issuer:"",hssCode:"2.5.1",link:"",note:""},
+  {stt:92,tc:"TC5",tchi:"5.4",code:"[5.4-02]",name:"Hồ sơ PCGD (KH, BC, biểu mẫu)",issued:"",issuer:"",hssCode:"2.5.2",link:"",note:""},
+  {stt:93,tc:"TC5",tchi:"5.4",code:"[5.4-03]",name:"Sổ theo dõi HS chuyển đi/đến",issued:"",issuer:"",hssCode:"2.1.3",link:"",note:""},
+  {stt:94,tc:"TC5",tchi:"5.4",code:"[5.4-04]",name:"Hồ sơ HS khuyết tật hòa nhập",issued:"",issuer:"",hssCode:"2.1.4",link:"",note:""},
+  {stt:95,tc:"TC5",tchi:"5.4",code:"[5.4-05]",name:"Hồ sơ tuyển sinh vào lớp 1",issued:"",issuer:"",hssCode:"2.6.1",link:"",note:""}
+];
+  let HSS = [], TEACHERS = [], CLASSES = [], IMAGES = [], MINHCHUNG = DEFAULT_MC.slice(), STATS = {};
   let currentClass = null;
   const CAT_ICONS = ['🏫','👩‍🏫','🏢','🤝','📖','🎗️','📁','📁'];
   const CAT_TINTS = ['#d6ecdb','#fff0d1','#dae7ff','#f0dcff','#ffdfd1','#ffe5b4','#e8f5ee','#e8f5ee'];
@@ -1351,6 +1500,228 @@
     renderCatalogOverview(document.getElementById('catOvSearch').value.trim());
   }
 
+  // ============ BẢNG MÃ HÓA MINH CHỨNG KĐCL ============
+  const TC_NAMES = {
+    'TC1':'Tổ chức và quản lý nhà trường',
+    'TC2':'Cán bộ quản lý, GV, NV và học sinh',
+    'TC3':'Cơ sở vật chất và thiết bị dạy học',
+    'TC4':'Quan hệ nhà trường, gia đình và xã hội',
+    'TC5':'Hoạt động giáo dục và kết quả giáo dục'
+  };
+  const TCHI_NAMES = {
+    '1.1':'Phương hướng, chiến lược XD & PT nhà trường',
+    '1.2':'Hội đồng trường và các hội đồng khác',
+    '1.3':'Tổ chức Đảng và các đoàn thể',
+    '1.4':'HT, PHT, tổ chuyên môn và tổ văn phòng',
+    '1.5':'Quản lý, phát triển đội ngũ CB, GV, NV',
+    '1.6':'Quản lý hành chính, tài chính và tài sản',
+    '2.1':'Đội ngũ CB quản lý, GV, NV (số lượng, cơ cấu, trình độ)',
+    '2.2':'Đào tạo, bồi dưỡng CB quản lý, GV, NV',
+    '2.3':'Năng lực nghề nghiệp của CB quản lý, GV, NV',
+    '3.1':'Khuôn viên, khu sân chơi, bãi tập',
+    '3.2':'Phòng học, khối phòng HC-QT và phòng chức năng',
+    '3.3':'Thư viện, thiết bị dạy học và CNTT',
+    '4.1':'Ban đại diện cha mẹ học sinh',
+    '4.2':'Công tác tham mưu, phối hợp, XHH giáo dục',
+    '5.1':'Thực hiện CT GDPT cấp tiểu học',
+    '5.2':'Tổ chức hoạt động trải nghiệm, NGLL',
+    '5.3':'Kết quả giáo dục',
+    '5.4':'Công tác phổ cập GD tiểu học'
+  };
+  const TC_COLORS = {'TC1':'#2d8a6e','TC2':'#3a7cc0','TC3':'#e8833a','TC4':'#8a5cb0','TC5':'#d4a843'};
+
+  function openMCOverview(){
+    document.getElementById('mcOverlay').style.display = 'flex';
+    document.getElementById('mcOverlay').classList.add('open');
+    document.getElementById('mcOvSearch').value = '';
+    renderMCOverview();
+  }
+  function closeMCOverview(){
+    document.getElementById('mcOverlay').style.display = 'none';
+    document.getElementById('mcOverlay').classList.remove('open');
+  }
+
+  function renderMCOverview(filter){
+    const q = (filter || '').toLowerCase();
+    const body = document.getElementById('mcBody');
+    // Group by TC → tiêu chí
+    const grouped = {};
+    MINHCHUNG.forEach(m => {
+      if(q && !m.code.toLowerCase().includes(q) && !m.name.toLowerCase().includes(q) && !m.tchi.includes(q)) return;
+      const key = m.tc;
+      if(!grouped[key]) grouped[key] = {};
+      if(!grouped[key][m.tchi]) grouped[key][m.tchi] = [];
+      grouped[key][m.tchi].push(m);
+    });
+
+    let totalMC = 0;
+    let html = '';
+    ['TC1','TC2','TC3','TC4','TC5'].forEach((tc, tci) => {
+      if(!grouped[tc]) return;
+      const color = TC_COLORS[tc];
+      const tcName = TC_NAMES[tc];
+      let tcCount = 0;
+      let innerHtml = '';
+
+      Object.keys(grouped[tc]).sort().forEach(tchi => {
+        const items = grouped[tc][tchi];
+        tcCount += items.length;
+        const tchiName = TCHI_NAMES[tchi] || tchi;
+        innerHtml += '<div style="padding:10px 18px 6px;font-weight:600;color:'+color+';font-size:.88rem;background:#f7fbf8;border-bottom:1px solid #eef2ef">';
+        innerHtml += '<span style="opacity:.6;margin-right:6px">▸</span>Tiêu chí '+escapeHtml(tchi)+': '+escapeHtml(tchiName)+'</div>';
+        items.forEach((m, mi) => {
+          const hasLink = m.hssCode && m.hssCode.trim();
+          const bg = mi % 2 === 0 ? '#fff' : '#f9fbfa';
+          innerHtml += '<div style="display:flex;align-items:center;gap:10px;padding:8px 18px 8px 36px;border-bottom:1px solid #f3f6f4;font-size:.86rem;background:'+bg+'">';
+          innerHtml += '<span style="font-family:Fraunces,serif;font-weight:600;color:'+color+';min-width:68px;font-size:.82rem;cursor:'+(hasLink?'pointer':'default')+'" '+(hasLink ? 'onclick="mcJumpToHSS(\''+escapeHtml(m.hssCode)+'\')" title="Nhảy đến HSS '+escapeHtml(m.hssCode)+'"' : '')+'>'+escapeHtml(m.code)+'</span>';
+          innerHtml += '<span style="flex:1;color:#3a4a42">'+escapeHtml(m.name)+'</span>';
+          if(hasLink) innerHtml += '<span style="background:#eaf5ef;color:#2d8a6e;padding:2px 10px;border-radius:99px;font-size:.72rem;font-weight:600;cursor:pointer;white-space:nowrap" onclick="mcJumpToHSS(\''+escapeHtml(m.hssCode)+'\')">📂 '+escapeHtml(m.hssCode)+'</span>';
+          if(m.link) innerHtml += '<a href="'+escapeHtml(m.link)+'" target="_blank" style="color:var(--g2);font-size:.78rem;text-decoration:none;white-space:nowrap" title="Mở minh chứng">Mở ↗</a>';
+          innerHtml += '</div>';
+        });
+      });
+      totalMC += tcCount;
+
+      html += '<div style="margin-bottom:14px;border:1px solid #eef2ef;border-radius:14px;overflow:hidden">';
+      html += '<div style="background:'+color+';color:white;padding:12px 18px;display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display===\'none\'?\'\':\'none\'">';
+      html += '<span style="font-family:Fraunces,serif;font-weight:600;font-size:.95rem">'+tc+'. '+escapeHtml(tcName)+'</span>';
+      html += '<span style="font-size:.78rem;opacity:.85">'+tcCount+' minh chứng</span></div>';
+      html += '<div style="'+(q || tci===0 ? '' : 'display:none')+'">'+innerHtml+'</div></div>';
+    });
+
+    document.getElementById('mcOvCount').textContent = totalMC + ' minh chứng · 5 tiêu chuẩn · 17 tiêu chí';
+    body.innerHTML = html || '<p style="text-align:center;color:#8a9690;padding:40px">Không tìm thấy minh chứng phù hợp.</p>';
+  }
+  function filterMCOverview(){ renderMCOverview(document.getElementById('mcOvSearch').value.trim()); }
+
+  function mcJumpToHSS(hssCode){
+    closeMCOverview();
+    // Search HSS for matching code and open it
+    const searchInput = document.getElementById('recSearch');
+    searchInput.value = hssCode;
+    searchInput.dispatchEvent(new Event('input'));
+    setTimeout(() => document.getElementById('records').scrollIntoView({behavior:'smooth'}), 200);
+  }
+
+  // ============ ADMIN MINH CHỨNG ============
+  let _mcRawRows = [];
+
+  function admLoadMC(){
+    _mcRawRows = MINHCHUNG.map((m, i) => ({
+      stt: i+1, tc: m.tc, tchi: m.tchi, code: m.code, name: m.name,
+      issued: m.issued || '', issuer: m.issuer || '', hssCode: m.hssCode || '',
+      link: m.link || '', note: m.note || ''
+    }));
+    admRenderMCTable(_mcRawRows);
+  }
+
+  function admRenderMCTable(rows){
+    const wrap = document.getElementById('admMcTable');
+    if(!rows.length){
+      wrap.innerHTML = '<p style="padding:20px;text-align:center;color:#8a9690">Không có minh chứng.</p>';
+      return;
+    }
+    let html = '<table class="adm-edit-table"><thead><tr><th style="width:26px">TT</th><th style="width:60px">TC</th><th style="width:78px">Mã MC</th><th>Tên minh chứng</th><th style="width:70px">HSS</th><th style="width:54px"></th></tr></thead><tbody>';
+    rows.forEach((r, i) => {
+      const bg = i%2===0 ? '' : 'background:#f9fbfa';
+      html += '<tr data-idx="'+i+'" style="'+bg+'"><td class="row-idx">'+r.stt+'</td>';
+      html += '<td style="font-size:.72rem;color:#6b7a72">'+escapeHtml(r.tchi)+'</td>';
+      html += '<td style="font-weight:600;color:var(--g2);font-size:.78rem">'+escapeHtml(r.code)+'</td>';
+      html += '<td><input type="text" value="'+escapeHtml(r.name)+'" onchange="_mcRawRows['+i+'].name=this.value.trim()" style="font-size:.8rem"></td>';
+      html += '<td><input type="text" value="'+escapeHtml(r.hssCode)+'" onchange="_mcRawRows['+i+'].hssCode=this.value.trim()" style="font-size:.78rem;width:60px;text-align:center"></td>';
+      html += '<td style="white-space:nowrap"><button onclick="admDeleteMC('+i+')" style="background:none;border:none;cursor:pointer;font-size:.85rem;opacity:.4" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.4" title="Xóa">🗑️</button></td>';
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+    wrap.innerHTML = html;
+  }
+
+  function admFilterMC(){
+    const q = document.getElementById('admMcSearch').value.trim().toLowerCase();
+    if(!q){ admRenderMCTable(_mcRawRows); return; }
+    admRenderMCTable(_mcRawRows.filter(r => r.code.toLowerCase().includes(q) || r.name.toLowerCase().includes(q) || r.tchi.includes(q)));
+  }
+
+  function admAddMC(){
+    const tchi = document.getElementById('admMcTchi').value.trim();
+    const code = document.getElementById('admMcCode').value.trim();
+    const name = document.getElementById('admMcName').value.trim();
+    const hss = document.getElementById('admMcHss').value.trim();
+    const msg = document.getElementById('admMcMsg');
+    if(!tchi || !code || !name){
+      msg.textContent = '❌ Nhập tiêu chí, mã MC và tên minh chứng.';
+      msg.className = 'adm-alert err'; setTimeout(()=>msg.className='adm-alert',3000); return;
+    }
+    const tc = 'TC' + tchi.split('.')[0];
+    const stt = _mcRawRows.length + 1;
+    _mcRawRows.push({stt, tc, tchi, code, name, issued:'', issuer:'', hssCode:hss, link:'', note:''});
+    admRenderMCTable(_mcRawRows);
+    document.getElementById('admMcTchi').value = '';
+    document.getElementById('admMcCode').value = '';
+    document.getElementById('admMcName').value = '';
+    document.getElementById('admMcHss').value = '';
+    msg.textContent = '✅ Đã thêm "'+code+' '+name+'". Nhấn Lưu để ghi lên Sheet.';
+    msg.className = 'adm-alert ok'; setTimeout(()=>msg.className='adm-alert',4000);
+  }
+
+  function admDeleteMC(i){
+    if(!_mcRawRows[i]) return;
+    if(!confirm('Xóa "'+_mcRawRows[i].code+' '+_mcRawRows[i].name+'"?')) return;
+    _mcRawRows.splice(i, 1);
+    _mcRawRows.forEach((r,j) => r.stt = j+1);
+    admRenderMCTable(_mcRawRows);
+    const msg = document.getElementById('admMcMsg');
+    msg.textContent = '🗑️ Đã xóa. Nhấn Lưu để cập nhật lên Sheet.';
+    msg.className = 'adm-alert warn'; setTimeout(()=>msg.className='adm-alert',4000);
+  }
+
+  function admSaveMC(){
+    const msg = document.getElementById('admMcMsg');
+    if(!_mcRawRows.length){ msg.textContent='❌ Chưa có dữ liệu.'; msg.className='adm-alert err'; return; }
+    const sheetRows = _mcRawRows.map((r,i) => [i+1, r.tc, r.tchi, r.code, r.name, r.issued, r.issuer, r.hssCode, r.link, r.note]);
+    msg.textContent = '⏳ Đang lưu...'; msg.className = 'adm-alert warn';
+    admPostToGAS({action:'updateMinhChung', rows: sheetRows}, function(ok, resp){
+      if(ok){
+        msg.textContent = '✅ Đã lưu '+sheetRows.length+' minh chứng lên Sheet!';
+        msg.className = 'adm-alert ok';
+        try{ localStorage.removeItem(CACHE_KEY); } catch(e){}
+      } else {
+        msg.textContent = '❌ Lỗi: '+(resp||'Không kết nối');
+        msg.className = 'adm-alert err';
+      }
+      setTimeout(()=>msg.className='adm-alert',5000);
+    });
+  }
+
+  // ============ XUẤT EXCEL MINH CHỨNG ============
+  function exportMCExcel(){
+    if(typeof XLSX === 'undefined'){ alert('Thư viện XLSX chưa tải xong.'); return; }
+    const wb = XLSX.utils.book_new();
+    const rows = [
+      ['BẢNG DANH MỤC MÃ MINH CHỨNG'],
+      ['Theo TT 17/2018/TT-BGDĐT (sửa đổi bởi TT 22/2024/TT-BGDĐT)'],
+      [],
+      ['Tiêu chuẩn','STT','Mã minh chứng','Tên minh chứng','Số, ngày ban hành','Nơi ban hành','Mã HSS','Ghi chú']
+    ];
+    let curTC = '', curTChi = '';
+    const data = _mcRawRows.length ? _mcRawRows : MINHCHUNG;
+    data.forEach((m, i) => {
+      const tc = m.tc || '';
+      const tchi = m.tchi || '';
+      let tcLabel = '', tchiLabel = '';
+      if(tc !== curTC){ curTC = tc; tcLabel = tc + '. ' + (TC_NAMES[tc]||''); curTChi = ''; }
+      if(tchi !== curTChi){ curTChi = tchi; tchiLabel = 'Tiêu chí '+tchi+': '+(TCHI_NAMES[tchi]||''); rows.push([tchiLabel]); }
+      rows.push([tcLabel, m.stt||i+1, m.code, m.name, m.issued||'', m.issuer||'', m.hssCode||'', m.note||'']);
+    });
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    ws['!cols'] = [{wch:32},{wch:6},{wch:14},{wch:42},{wch:26},{wch:20},{wch:10},{wch:20}];
+    ws['!merges'] = [{s:{r:0,c:0},e:{r:0,c:7}},{s:{r:1,c:0},e:{r:1,c:7}}];
+    XLSX.utils.book_append_sheet(wb, ws, 'MinhChung');
+    XLSX.writeFile(wb, 'Bang_MaHoa_MinhChung_KDCL.xlsx');
+    const msg = document.getElementById('admMcMsg') || document.getElementById('admImportMsg');
+    if(msg){ msg.textContent = '✅ Đã tải xuống Bang_MaHoa_MinhChung_KDCL.xlsx'; msg.className = 'adm-alert ok'; setTimeout(()=>msg.className='adm-alert',3000); }
+  }
+
   // ============ GIỚI THIỆU ============
   function renderAbout(){
     // Ảnh: lấy ảnh loại 'truong' đầu tiên, hoặc ảnh đầu tiên bất kỳ
@@ -1410,6 +1781,7 @@
     TEACHERS = data.teachers || [];
     CLASSES = data.classes || [];
     IMAGES = data.images || [];
+    MINHCHUNG = (data.minhchung && data.minhchung.length) ? data.minhchung : DEFAULT_MC.slice();
     STATS = data.stats || {};
     renderCarousel();
     renderAbout();
@@ -1548,9 +1920,10 @@
   function admTab(tab){
     document.querySelectorAll('.admin-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
     document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
-    const map = {info:'Info', hss:'Hss', import:'Import', pwd:'Pwd'};
+    const map = {info:'Info', hss:'Hss', mc:'Mc', import:'Import', pwd:'Pwd'};
     document.getElementById('admSec' + (map[tab]||tab)).classList.add('active');
     if(tab === 'hss') admLoadHSS();
+    if(tab === 'mc') admLoadMC();
   }
 
   // --- Tab 1: Thông tin trường ---
