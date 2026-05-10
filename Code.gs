@@ -872,8 +872,8 @@ function _withLock_(fn) {
 // SECURITY HELPERS — 2026-05-07 (Phương án A: vá bảo mật trước khi 15 GV dùng)
 // ============================================================================
 //   _qtRandomToken(n)              — sinh chuỗi hex ngẫu nhiên
-//   _qtHashPassword(plain[,salt])  — SHA-256(salt+plain) → "salt$hash"
-//   _qtVerifyPassword(stored,plain)— verify + báo có cần upgrade plain→hash
+//   _qtHashPassword(plain[,salt])  — SHA-256(salt+plain) → "salt$hash" (legacy, chỉ dùng verify hash cũ)
+//   _qtVerifyPassword(stored,plain)— verify + báo có cần downgrade hash→plain
 //   _qtCreateSession(user,role,..) — sinh session token, lưu CacheService 8h
 //   _qtVerifySession(token)        — đọc session, refresh TTL nếu còn hạn
 //   _qlclValidGrade_(key,v)        — whitelist T/H/C/Đ/CCG, 0..10, rỗng
@@ -3824,7 +3824,7 @@ function setupSignatureSchema() {
  *  Đặc tính:
  *    • IDEMPOTENT — nếu username đã tồn tại trong tab Users, hỏi có ghi đè password
  *      hay không (không tạo trùng row).
- *    • Password được HASH ngay (SHA-256 + salt) — Sheet không lưu plain text.
+ *    • Password lưu PLAIN TEXT (2026-05-10 — Phó HT cần tra cứu nhanh trong Sheet).
  *    • Role mặc định: 'admin' (đủ quyền vào Admin panel + sửa điểm).
  *
  *  Yêu cầu trước khi chạy:
@@ -4991,10 +4991,11 @@ function _qlclTplHandle(action, body) {
   }
 }
 
-// ── Login — verify hash + tạo session token (refactor 2026-05-07) ──────────
-//   • Backwards-compat: nếu password trong sheet còn plain-text → match plain
-//     rồi TỰ ĐỘNG hash lại (lazy migration, không cần can thiệp thủ công).
-//   • Trả sessionToken (32 hex chars, TTL 8h) — FE phải gửi kèm mọi request ghi.
+// ── Login — verify password + tạo session token (refactor 2026-05-10) ─────
+//   • Plain text mode: cell trong Sheet là plain → so sánh trực tiếp.
+//   • Backwards-compat: cell còn dạng salt$hash (từ trước 2026-05-10) vẫn cho
+//     login được, sau đó TỰ ĐỘNG ghi đè bằng plain (downgrade lazy migration).
+//   • Trả sessionToken (32 hex chars, TTL 30 ngày) — FE phải gửi kèm mọi request ghi.
 function _qtDoLogin(username, password) {
   if (!username || !password) return { ok: false, error: 'Thiếu thông tin' };
   const sh = _qtSheet(_QT_SN.USERS);
@@ -5046,7 +5047,7 @@ function _qtDoLogin(username, password) {
 
   _auditLog('_AuditLog_QLCL', {
     action: 'login_ok', username: username, role: role,
-    note: v.needUpgrade ? 'đã upgrade password sang hash' : ''
+    note: v.needUpgrade ? 'đã downgrade password về plain' : ''
   });
 
   return { ok: true, sessionToken: sessionToken, user: {
@@ -5382,9 +5383,9 @@ function _qtSaveNhanXetBatch(data) {
   return { ok: true, message: 'Đã lưu ' + ok + ' nhận xét' };
 }
 
-// ── USERS (giữ nguyên template — bảng Users của QLCL với password plain-text) ──
+// ── USERS (bảng Users của QLCL — password lưu PLAIN TEXT từ 2026-05-10) ──
 // Lưu ý: bảng Users chỉ dùng cho QLCL workspace, KHÔNG liên quan AUTH_TOKEN
-// của HSS/KĐCL. Để tăng an toàn, tương lai có thể hash password.
+// của HSS/KĐCL. Phó HT cần tra cứu password GV nhanh trong Sheet → plain text.
 function _qtGetUsers() {
   const users = _qtToObjects(_qtSheet(_QT_SN.USERS));
   users.forEach(u => { delete u.password; });
@@ -5403,16 +5404,12 @@ function _qtSaveUser(data) {
     if (String(allData[i][uCol]).toLowerCase() === username.toLowerCase()) { rowIdx = i + 1; break; }
   }
 
-  // ⭐ 2026-05-07: hash password trước khi ghi (nếu chưa có dạng salt$hash)
+  // ⭐ 2026-05-10: lưu PLAIN TEXT (Phó HT cần tra cứu nhanh trong Sheet).
   const dataToWrite = Object.assign({}, data);
   let hadPasswordChange = false;
   if (data.password) {
-    const ps = String(data.password);
-    // Nếu admin paste sẵn salt$hash thì giữ; còn lại đều hash
-    if (ps.indexOf('$') !== 16 || !/^[0-9a-f]{16}\$[0-9a-f]{64}$/i.test(ps)) {
-      dataToWrite.password = _qtHashPassword(ps);
-      hadPasswordChange = true;
-    }
+    dataToWrite.password = String(data.password);
+    hadPasswordChange = true;
   }
 
   const row = new Array(h.length).fill('');
