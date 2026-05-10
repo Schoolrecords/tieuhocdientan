@@ -906,21 +906,24 @@ function _qtHashPassword(plain, salt) {
 
 function _qtVerifyPassword(stored, plain) {
   if (!stored || plain === undefined || plain === null) return { ok: false, needUpgrade: false };
+  // 2026-05-10: Plain text mode — Phó HT cần tra cứu password GV nhanh trong
+  //   Sheet, không hash. Sheet là môi trường nội bộ trường, chấp nhận đánh đổi.
+  //   _qtHashPassword vẫn còn để compat với row cũ nếu có (lazy migration).
   const s = String(stored);
+  // (1) Plain compare — case mặc định
+  if (s === String(plain)) return { ok: true, needUpgrade: false };
+  // (2) Backward-compat: nếu trước đây đã hash → vẫn cho login để tránh kẹt user
   const idx = s.indexOf('$');
-  // Format hash: "salt$hex" — salt là hex 16 ký tự (ta sinh), idx == 16
-  if (idx < 8 || idx > 64) {
-    // Không có '$' (hoặc bất thường) → coi là plain-text legacy
-    return { ok: s === String(plain), needUpgrade: true };
+  if (idx >= 8 && idx <= 64) {
+    const salt = s.substring(0, idx);
+    const expected = s.substring(idx + 1);
+    if (expected.length === 64 && /^[0-9a-f]+$/i.test(expected)) {
+      const calc = _qtHashPassword(plain, salt).split('$')[1];
+      // needUpgrade=true → _qtDoLogin sẽ tự đổi cell hash → plain (xem dưới)
+      return { ok: calc === expected, needUpgrade: true };
+    }
   }
-  const salt = s.substring(0, idx);
-  const expected = s.substring(idx + 1);
-  // Hex trong expected phải toàn hex digit, độ dài 64 (SHA-256 hex)
-  if (expected.length !== 64 || !/^[0-9a-f]+$/i.test(expected)) {
-    return { ok: s === String(plain), needUpgrade: true };
-  }
-  const calc = _qtHashPassword(plain, salt).split('$')[1];
-  return { ok: calc === expected, needUpgrade: false };
+  return { ok: false, needUpgrade: false };
 }
 
 // 2026-05-07 (Phase 4): TTL 30 ngày + lưu PropertiesService (CacheService chỉ
@@ -3903,7 +3906,8 @@ function seedAdmin() {
     }
   }
 
-  const hashed = _qtHashPassword(password);
+  // 2026-05-10: Lưu PLAIN TEXT (Phó HT cần tra cứu trong Sheet, không hash)
+  const stored = String(password);
 
   if (existRow > 0) {
     // User đã tồn tại — hỏi xác nhận trước khi ghi đè
@@ -3913,7 +3917,7 @@ function seedAdmin() {
       ui.ButtonSet.YES_NO
     );
     if (conf !== ui.Button.YES) { Logger.log('[seedAdmin] User huỷ ghi đè.'); return { ok: false, error: 'User cancelled overwrite' }; }
-    sh.getRange(existRow, COL.password + 1).setValue(hashed);
+    sh.getRange(existRow, COL.password + 1).setValue(stored);
     // Đảm bảo role là admin (nếu trước đó là gv)
     sh.getRange(existRow, COL.role + 1).setValue('admin');
     Logger.log('[seedAdmin] Đã đặt lại password cho ' + username + ' (row ' + existRow + ').');
@@ -3921,7 +3925,7 @@ function seedAdmin() {
     // Tạo row mới — append vào cuối
     const newRow = new Array(header.length).fill('');
     newRow[COL.username] = username;
-    newRow[COL.password] = hashed;
+    newRow[COL.password] = stored;
     newRow[COL.hoten]    = hoten;
     newRow[COL.role]     = 'admin';
     if (COL.lop >= 0)        newRow[COL.lop] = '';
@@ -3938,8 +3942,7 @@ function seedAdmin() {
     '   Họ tên:   ' + hoten + '\n' +
     '   Role:     admin\n\n' +
     (autoGen ? '⚠ Password được hệ thống tự sinh — CHÉP NGAY.\n\n' : '') +
-    'Password đã được hash an toàn trong Sheet — bạn KHÔNG thấy lại password gốc nữa.\n' +
-    'Lưu vào Zalo/Notes ngay rồi xoá Logs để tránh lộ.';
+    'Password được lưu PLAIN TEXT trong tab Users (theo lựa chọn của Admin để dễ tra cứu).';
   ui.alert('Hoàn tất', msg, ui.ButtonSet.OK);
 
   // Log thêm vào console (Apps Script Executions log) để user copy
@@ -3950,6 +3953,190 @@ function seedAdmin() {
   Logger.log('═══════════════════════════════════════════════');
 
   return { ok: true, username: username, autoGen: autoGen };
+}
+
+/**
+ * =====================================================================================
+ *  bulkResetPasswordsByName — Reset password toàn bộ tab Users theo pattern tên
+ * =====================================================================================
+ *
+ *  Pattern (2026-05-10 — yêu cầu Phó HT TH Diễn Tân):
+ *    • username 'admin'        → password = 'DienTan@2026'
+ *    • username khác (GV/NV)   → password = <tên cuối bỏ dấu> + '2026'
+ *      VD: 'Cao Thị Thanh Nga'   → 'Nga2026'
+ *          'Đậu Thị Quyên'       → 'Quyen2026'
+ *          'Nguyễn Văn Siêu'     → 'Sieu2026'
+ *          'Hoàng Thị Bày'       → 'Bay2026'
+ *
+ *  Đặc tính:
+ *    • Idempotent — chạy lại không vấn đề (kết quả y hệt).
+ *    • Hiện preview 5 row đầu trước khi ghi → Phó HT confirm.
+ *    • Trùng tên (vd 2 cô Nga) → cùng password, ghi cảnh báo trong Log.
+ *    • Bỏ qua row có hoten trống → cảnh báo Log để Phó HT điền tay.
+ *    • Lưu PLAIN TEXT (không hash).
+ *
+ *  Cách dùng:
+ *    Apps Script editor → dropdown chọn `bulkResetPasswordsByName` → ▶ Run.
+ * =====================================================================================
+ */
+function bulkResetPasswordsByName() {
+  const ADMIN_PASSWORD = 'DienTan@2026';
+  const PASSWORD_SUFFIX = '2026';
+
+  const ss = _getSS();
+  const ui = SpreadsheetApp.getUi();
+  const sh = ss.getSheetByName(_QT_SN.USERS);
+  if (!sh) {
+    ui.alert('Lỗi', 'Tab "' + _QT_SN.USERS + '" chưa tồn tại.', ui.ButtonSet.OK);
+    return { ok: false, error: 'Users sheet missing' };
+  }
+  const lastRow = sh.getLastRow();
+  if (lastRow < 2) {
+    ui.alert('Lỗi', 'Tab Users chưa có user nào. Hãy import GV trước.', ui.ButtonSet.OK);
+    return { ok: false, error: 'No users to reset' };
+  }
+  const data = sh.getRange(1, 1, lastRow, sh.getLastColumn()).getValues();
+  const header = data[0].map(function (h) { return String(h).trim(); });
+  const COL = {
+    username: header.indexOf('username'),
+    password: header.indexOf('password'),
+    hoten:    header.indexOf('hoten')
+  };
+  if (COL.username < 0 || COL.password < 0 || COL.hoten < 0) {
+    ui.alert('Lỗi', 'Header tab Users thiếu cột bắt buộc (username, password, hoten).', ui.ButtonSet.OK);
+    return { ok: false, error: 'Missing columns' };
+  }
+
+  // ── Build danh sách thay đổi (chưa ghi) ─────────────────────────────────
+  const changes = [];   // [{rowNumber, username, hoten, oldPwd, newPwd, note}]
+  const pwdCount = {};  // map newPwd → số lần xuất hiện (phát hiện trùng)
+
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const username = String(row[COL.username] || '').trim().toLowerCase();
+    const hoten    = String(row[COL.hoten] || '').trim();
+    const oldPwd   = String(row[COL.password] || '');
+    let newPwd, note;
+
+    if (username === 'admin') {
+      newPwd = ADMIN_PASSWORD;
+      note = 'admin';
+    } else if (!hoten) {
+      newPwd = '';
+      note = '⚠ Bỏ qua: hoten trống';
+    } else {
+      const lastName = _vnGetLastName_(hoten);
+      if (!lastName) {
+        newPwd = '';
+        note = '⚠ Bỏ qua: không tách được tên cuối từ "' + hoten + '"';
+      } else {
+        newPwd = lastName + PASSWORD_SUFFIX;
+        note = 'GV';
+        pwdCount[newPwd] = (pwdCount[newPwd] || 0) + 1;
+      }
+    }
+
+    changes.push({
+      rowNumber: i + 1,
+      username: username,
+      hoten: hoten,
+      oldPwd: oldPwd,
+      newPwd: newPwd,
+      note: note
+    });
+  }
+
+  // ── Đếm số trùng ────────────────────────────────────────────────────────
+  const dupes = [];
+  Object.keys(pwdCount).forEach(function (pwd) {
+    if (pwdCount[pwd] > 1) dupes.push({ pwd: pwd, count: pwdCount[pwd] });
+  });
+
+  // ── Hiện preview 5 row đầu để Phó HT xác nhận ───────────────────────────
+  const preview = changes.slice(0, 5).map(function (c) {
+    return '  ' + (c.username || '(rỗng)') + '  →  ' + c.newPwd + '   [' + c.note + ']  | ' + c.hoten;
+  }).join('\n');
+  const skipCount  = changes.filter(function (c) { return c.note.indexOf('Bỏ qua') >= 0; }).length;
+  const writeCount = changes.length - skipCount;
+
+  let msg = 'Sẽ reset password ' + writeCount + '/' + changes.length + ' user.\n\n';
+  msg += '5 row đầu (preview):\n' + preview;
+  if (changes.length > 5) msg += '\n  ... (+ ' + (changes.length - 5) + ' user nữa)';
+  if (skipCount > 0) msg += '\n\n⚠ Có ' + skipCount + ' row bị bỏ qua (xem Logs).';
+  if (dupes.length) {
+    msg += '\n\n⚠ Có ' + dupes.length + ' password TRÙNG (vì 2+ GV cùng tên cuối):';
+    dupes.slice(0, 3).forEach(function (d) {
+      msg += '\n  • ' + d.pwd + ' (' + d.count + ' user)';
+    });
+    if (dupes.length > 3) msg += '\n  • ... + ' + (dupes.length - 3) + ' trùng nữa';
+  }
+  msg += '\n\nTiếp tục GHI?';
+
+  const conf = ui.alert('Reset password hàng loạt', msg, ui.ButtonSet.YES_NO);
+  if (conf !== ui.Button.YES) {
+    Logger.log('[bulkReset] User huỷ.');
+    return { ok: false, error: 'User cancelled' };
+  }
+
+  // ── Ghi vào Sheet (chỉ ghi cột password) ────────────────────────────────
+  const pwdValues = changes.map(function (c) {
+    // Nếu skip (newPwd rỗng) → giữ nguyên oldPwd
+    return [c.newPwd === '' ? c.oldPwd : c.newPwd];
+  });
+  sh.getRange(2, COL.password + 1, pwdValues.length, 1).setValues(pwdValues);
+
+  // ── Log đầy đủ ──────────────────────────────────────────────────────────
+  Logger.log('═══════════════════════════════════════════════');
+  Logger.log('  BULK RESET PASSWORD — ' + writeCount + '/' + changes.length + ' user');
+  Logger.log('═══════════════════════════════════════════════');
+  changes.forEach(function (c) {
+    if (c.newPwd) {
+      Logger.log('  ' + c.username + '  →  ' + c.newPwd + '  | ' + c.hoten + '  [' + c.note + ']');
+    } else {
+      Logger.log('  ' + c.username + '  ' + c.note + '  | hoten="' + c.hoten + '"');
+    }
+  });
+  if (dupes.length) {
+    Logger.log('--- TRÙNG PASSWORD ---');
+    dupes.forEach(function (d) { Logger.log('  ' + d.pwd + ': ' + d.count + ' user'); });
+  }
+
+  // ── Thông báo kết quả ───────────────────────────────────────────────────
+  let summary = '✅ Đã reset ' + writeCount + ' password.';
+  if (skipCount > 0) summary += '\n⚠ Bỏ qua ' + skipCount + ' row.';
+  if (dupes.length)  summary += '\n⚠ Có ' + dupes.length + ' password trùng.';
+  summary += '\n\nXem View → Logs để biết chi tiết.';
+  ui.alert('Hoàn tất', summary, ui.ButtonSet.OK);
+
+  return { ok: true, written: writeCount, skipped: skipCount, duplicates: dupes.length };
+}
+
+/**
+ * Lấy tên cuối (đứng cuối trong "Họ Đệm Tên") + bỏ dấu Việt → ASCII.
+ *
+ * VD:
+ *   "Cao Thị Thanh Nga"   → "Nga"
+ *   "Đậu Thị Quyên"       → "Quyen"
+ *   "Hoàng Thị Bày"       → "Bay"
+ *   "  Lê  Văn  Sỹ  "     → "Sy"
+ *   "Đoàn Thị Phương Lý"  → "Ly"
+ */
+function _vnGetLastName_(hoten) {
+  const parts = String(hoten || '').trim().split(/\s+/);
+  if (!parts.length || !parts[0]) return '';
+  const last = parts[parts.length - 1];
+  return _vnRemoveDiacritics_(last);
+}
+
+/**
+ * Bỏ dấu tiếng Việt: "Quyên" → "Quyen", "Đào" → "Dao".
+ */
+function _vnRemoveDiacritics_(str) {
+  return String(str || '')
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')   // U+0300..036F = combining diacritical marks
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D');
 }
 
 /**
@@ -4838,14 +5025,15 @@ function _qtDoLogin(username, password) {
     return { ok: false, error: 'Sai mật khẩu' };
   }
 
-  // ⭐ Auto-upgrade plain → hash (lazy migration)
+  // ⭐ Auto-downgrade hash → plain (2026-05-10: Phó HT cần tra cứu password
+  //    nhanh trong Sheet, KHÔNG hash. Lần đầu user login với password đúng
+  //    nhưng cell đang là hash → ghi đè bằng plain text.)
   if (v.needUpgrade) {
     try {
-      const newHash = _qtHashPassword(password);
-      sh.getRange(rowIdx + 1, pCol + 1).setValue(newHash);
-      Logger.log('[AUTH] Đã tự động hash password cho: ' + username);
+      sh.getRange(rowIdx + 1, pCol + 1).setValue(String(password));
+      Logger.log('[AUTH] Đã downgrade hash → plain cho: ' + username);
     } catch (e) {
-      Logger.log('[AUTH] Lỗi khi upgrade hash: ' + e.message);
+      Logger.log('[AUTH] Lỗi khi downgrade: ' + e.message);
     }
   }
 
