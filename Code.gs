@@ -1327,14 +1327,11 @@ const DATA_HSS = [
   ["", "8.1. Hồ sơ tổ chức, hội họp", "", "", ""],
   ["88", "8.1.1. DS Trích ngang; Quy chế hoạt động Ban đại diện", "https://drive.google.com/drive/folders/1NjG6mMpqwHEug-LFtzEeiKj2WarlECkf", "Trưởng Ban ĐDCMHS", "4.1"],
   ["89", "8.1.2. KH hoạt động và các biên bản của Ban đại diện", "https://drive.google.com/drive/folders/1kWH77xwSAK0xPcZqnik4lcVZJhtYQIQa", "Trưởng Ban ĐDCMHS", "4.1, 4.2"],
-  ["", "9. HỒ SƠ CÁN BỘ, GIÁO VIÊN, NHÂN VIÊN", "", "", ""],
-  ["", "9.1. Hồ sơ Năng lực", "", "", ""],
-  ["90", "9.1.1. Hồ sơ Năng lực (công tác TCCB)", "", "Cá nhân CB-GV-NV", "2.1, 2.2, 2.3"],
-  ["91", "9.1.2. Đánh giá xếp loại theo NĐ90 và Đánh giá CNN GV", "", "Cá nhân CB-GV-NV", "2.1, 2.2"],
-  ["92", "9.1.3. Hồ sơ BDTX theo module hàng năm", "", "Cá nhân CB-GV-NV", "2.2"],
-  ["93", "9.1.4. Kế hoạch bài dạy; Sổ dự giờ", "", "Cá nhân CB-GV-NV", "2.2, 5.1"],
-  ["", "9.2. Sổ Chủ nhiệm", "", "", ""],
-  ["94", "9.2.1. Sổ Chủ nhiệm (kế hoạch, theo dõi, nhận xét HS)", "https://drive.google.com/drive/folders/1_sJC3VBvwibhuaGA-mIMB5kT81OGD4bE", "GVCN", "2.2, 2.4, 5.1"],
+  // Nhóm 9 — gọn còn Sổ Chủ nhiệm. Phần "Hồ sơ CB-GV-NV cá nhân" đã có module
+  // riêng (mảng "Hồ sơ CBGV-NV" trên trang chủ — render từ sheet DSGV) nên
+  // không liệt kê lại trong Danh mục HSS để tránh trùng lặp.
+  ["", "9. SỔ CHỦ NHIỆM", "", "", ""],
+  ["94", "9.1. Sổ Chủ nhiệm (kế hoạch, theo dõi, nhận xét HS)", "", "GVCN", "2.2, 2.4, 5.1"],
   ["", "10. KIỂM ĐỊNH CHẤT LƯỢNG GIÁO DỤC (KĐCL)", "", "", ""],
   ["", "10.1. Hồ sơ Hội đồng tự đánh giá", "", "", ""],
   ["95", "10.1.1. QĐ thành lập Hội đồng tự đánh giá", "", "Hiệu trưởng", "TĐG"],
@@ -3806,6 +3803,283 @@ function setupSignatureSchema() {
 
   Logger.log('[setupSignatureSchema] ' + JSON.stringify(report));
   return report;
+}
+
+/**
+ * =====================================================================================
+ *  seedAdmin — Tạo tài khoản Admin đầu tiên cho trường (chạy 1 lần sau setupAll)
+ * =====================================================================================
+ *
+ *  Cách dùng:
+ *    1. Apps Script editor → dropdown chọn `seedAdmin` → ▶ Run
+ *    2. Hộp thoại 1: nhập username (Enter để dùng mặc định 'admin')
+ *    3. Hộp thoại 2: nhập password (Enter để hệ thống tự sinh password ngẫu nhiên)
+ *    4. Hộp thoại 3: nhập họ tên (Enter để dùng 'Quản trị viên')
+ *    5. Khi xong, View → Logs để xem credential. CHÉP RA NGAY và xoá Logs sau khi
+ *       đã lưu vào Zalo/Notes.
+ *
+ *  Đặc tính:
+ *    • IDEMPOTENT — nếu username đã tồn tại trong tab Users, hỏi có ghi đè password
+ *      hay không (không tạo trùng row).
+ *    • Password được HASH ngay (SHA-256 + salt) — Sheet không lưu plain text.
+ *    • Role mặc định: 'admin' (đủ quyền vào Admin panel + sửa điểm).
+ *
+ *  Yêu cầu trước khi chạy:
+ *    • Đã chạy setupAll (tab `Users` phải tồn tại với header
+ *      username | password | hoten | role | lop_phu_trach | phan_cong_giang_day).
+ * =====================================================================================
+ */
+function seedAdmin() {
+  const ss = _getSS();
+  const ui = SpreadsheetApp.getUi();
+
+  // ── Kiểm tra tab Users ──────────────────────────────────────────────────
+  const sh = ss.getSheetByName(_QT_SN.USERS);
+  if (!sh) {
+    ui.alert('Lỗi', 'Tab "' + _QT_SN.USERS + '" chưa tồn tại. Hãy chạy hàm setupAll trước.', ui.ButtonSet.OK);
+    return { ok: false, error: 'Users sheet missing — run setupAll first' };
+  }
+  const data = sh.getDataRange().getValues();
+  if (data.length < 1) {
+    ui.alert('Lỗi', 'Tab Users không có header. Hãy chạy lại setupAll.', ui.ButtonSet.OK);
+    return { ok: false, error: 'Users sheet has no header' };
+  }
+  const header = data[0].map(function (h) { return String(h).trim(); });
+  const COL = {
+    username:    header.indexOf('username'),
+    password:    header.indexOf('password'),
+    hoten:       header.indexOf('hoten'),
+    role:        header.indexOf('role'),
+    lop:         header.indexOf('lop_phu_trach'),
+    phan_cong:   header.indexOf('phan_cong_giang_day')
+  };
+  if (COL.username < 0 || COL.password < 0 || COL.role < 0) {
+    ui.alert('Lỗi', 'Header tab Users thiếu cột bắt buộc (username, password, role). Header hiện có:\n' + header.join(', '), ui.ButtonSet.OK);
+    return { ok: false, error: 'Users header missing required cols' };
+  }
+
+  // ── Hỏi username ────────────────────────────────────────────────────────
+  const r1 = ui.prompt(
+    'Tạo tài khoản Admin (1/3)',
+    'Tên đăng nhập (Enter để dùng mặc định "admin"):',
+    ui.ButtonSet.OK_CANCEL
+  );
+  if (r1.getSelectedButton() !== ui.Button.OK) { Logger.log('[seedAdmin] User huỷ.'); return { ok: false, error: 'User cancelled' }; }
+  const username = (r1.getResponseText() || 'admin').trim().toLowerCase();
+  if (!username) { ui.alert('Lỗi', 'Username không được rỗng.', ui.ButtonSet.OK); return { ok: false, error: 'Empty username' }; }
+
+  // ── Hỏi password ────────────────────────────────────────────────────────
+  const r2 = ui.prompt(
+    'Tạo tài khoản Admin (2/3)',
+    'Mật khẩu (≥ 8 ký tự).\n\nĐể TRỐNG → hệ thống tự sinh password ngẫu nhiên 12 ký tự (xem trong Log).',
+    ui.ButtonSet.OK_CANCEL
+  );
+  if (r2.getSelectedButton() !== ui.Button.OK) { Logger.log('[seedAdmin] User huỷ.'); return { ok: false, error: 'User cancelled' }; }
+  let password = (r2.getResponseText() || '').trim();
+  let autoGen = false;
+  if (!password) {
+    password = _seedAdminGenPassword_(12);
+    autoGen = true;
+  } else if (password.length < 8) {
+    ui.alert('Lỗi', 'Password phải có ít nhất 8 ký tự.', ui.ButtonSet.OK);
+    return { ok: false, error: 'Password too short' };
+  }
+
+  // ── Hỏi họ tên (tuỳ chọn) ───────────────────────────────────────────────
+  const r3 = ui.prompt(
+    'Tạo tài khoản Admin (3/3)',
+    'Họ tên hiển thị (Enter để dùng "Quản trị viên"):',
+    ui.ButtonSet.OK_CANCEL
+  );
+  if (r3.getSelectedButton() !== ui.Button.OK) { Logger.log('[seedAdmin] User huỷ.'); return { ok: false, error: 'User cancelled' }; }
+  const hoten = (r3.getResponseText() || 'Quản trị viên').trim();
+
+  // ── Tìm row username đã có (idempotent) ─────────────────────────────────
+  let existRow = -1;
+  for (let i = 1; i < data.length; i++) {
+    if (String(data[i][COL.username]).trim().toLowerCase() === username) {
+      existRow = i + 1;  // 1-based row number
+      break;
+    }
+  }
+
+  const hashed = _qtHashPassword(password);
+
+  if (existRow > 0) {
+    // User đã tồn tại — hỏi xác nhận trước khi ghi đè
+    const conf = ui.alert(
+      'Username "' + username + '" đã tồn tại',
+      'Tài khoản này đã có ở row ' + existRow + '. Bạn muốn ĐẶT LẠI mật khẩu (giữ nguyên các thông tin khác) không?',
+      ui.ButtonSet.YES_NO
+    );
+    if (conf !== ui.Button.YES) { Logger.log('[seedAdmin] User huỷ ghi đè.'); return { ok: false, error: 'User cancelled overwrite' }; }
+    sh.getRange(existRow, COL.password + 1).setValue(hashed);
+    // Đảm bảo role là admin (nếu trước đó là gv)
+    sh.getRange(existRow, COL.role + 1).setValue('admin');
+    Logger.log('[seedAdmin] Đã đặt lại password cho ' + username + ' (row ' + existRow + ').');
+  } else {
+    // Tạo row mới — append vào cuối
+    const newRow = new Array(header.length).fill('');
+    newRow[COL.username] = username;
+    newRow[COL.password] = hashed;
+    newRow[COL.hoten]    = hoten;
+    newRow[COL.role]     = 'admin';
+    if (COL.lop >= 0)        newRow[COL.lop] = '';
+    if (COL.phan_cong >= 0)  newRow[COL.phan_cong] = '';
+    sh.getRange(sh.getLastRow() + 1, 1, 1, header.length).setValues([newRow]);
+    Logger.log('[seedAdmin] Đã tạo tài khoản admin mới: ' + username);
+  }
+
+  // ── Hiện credential cho user ────────────────────────────────────────────
+  const msg =
+    '✅ Tài khoản Admin đã sẵn sàng.\n\n' +
+    '   Username: ' + username + '\n' +
+    '   Password: ' + password + '\n' +
+    '   Họ tên:   ' + hoten + '\n' +
+    '   Role:     admin\n\n' +
+    (autoGen ? '⚠ Password được hệ thống tự sinh — CHÉP NGAY.\n\n' : '') +
+    'Password đã được hash an toàn trong Sheet — bạn KHÔNG thấy lại password gốc nữa.\n' +
+    'Lưu vào Zalo/Notes ngay rồi xoá Logs để tránh lộ.';
+  ui.alert('Hoàn tất', msg, ui.ButtonSet.OK);
+
+  // Log thêm vào console (Apps Script Executions log) để user copy
+  Logger.log('═══════════════════════════════════════════════');
+  Logger.log('  CREDENTIAL ADMIN MỚI — CHÉP NGAY');
+  Logger.log('  Username: ' + username);
+  Logger.log('  Password: ' + password);
+  Logger.log('═══════════════════════════════════════════════');
+
+  return { ok: true, username: username, autoGen: autoGen };
+}
+
+/**
+ * =====================================================================================
+ *  cleanupNhomCBGVNV — Dọn nhóm 9 trùng lặp trong sheet "Danh muc HSS"
+ * =====================================================================================
+ *
+ *  Vì sao cần?
+ *    Sheet "Danh muc HSS" được seed lúc setupAll. Khi sửa DATA_HS trong Code.gs
+ *    (rút gọn nhóm 9), Sheet hiện tại KHÔNG tự cập nhật — vì setupAll idempotent
+ *    chỉ thêm tab mới, không sửa data có sẵn. Hàm này dọn 4 row CB-GV-NV cũ
+ *    (STT 90, 91, 92, 93) + đổi tiêu đề nhóm 9 + cập nhật mục 94.
+ *
+ *  Idempotent — chạy lại nhiều lần an toàn.
+ *
+ *  Cách dùng:
+ *    Apps Script editor → dropdown chọn `cleanupNhomCBGVNV` → ▶ Run.
+ *    Xem View → Logs để biết kết quả.
+ * =====================================================================================
+ */
+function cleanupNhomCBGVNV() {
+  const ss = _getSS();
+  const sh = ss.getSheetByName(SHEET_HSS);
+  if (!sh) {
+    Logger.log('[cleanup] Không tìm thấy sheet "' + SHEET_HSS + '". Bỏ qua.');
+    return { ok: false, error: 'Sheet missing' };
+  }
+  const lastRow = sh.getLastRow();
+  if (lastRow < 2) {
+    Logger.log('[cleanup] Sheet trống. Không cần dọn.');
+    return { ok: true, deleted: 0, updated: 0 };
+  }
+
+  const data = sh.getRange(1, 1, lastRow, 5).getValues();
+  // Schema: [STT, Tên hồ sơ, Link Drive, Phân công, Mã KĐCL]
+
+  // Các STT cần xoá hẳn
+  const STT_REMOVE = ['90', '91', '92', '93'];
+  // Các tên row tiêu đề con cần xoá
+  const TITLE_REMOVE = ['9.1. Hồ sơ Năng lực', '9.2. Sổ Chủ nhiệm'];
+  // Đổi tiêu đề nhóm 9
+  const OLD_GROUP_TITLE = '9. HỒ SƠ CÁN BỘ, GIÁO VIÊN, NHÂN VIÊN';
+  const NEW_GROUP_TITLE = '9. SỔ CHỦ NHIỆM';
+  // Đổi nội dung mục 94 (vì giờ là 9.1 trực tiếp, không còn 9.2.1)
+  const NEW_94_TITLE = '9.1. Sổ Chủ nhiệm (kế hoạch, theo dõi, nhận xét HS)';
+
+  const rowsToDelete = [];   // 1-based row numbers
+  let updatedCount = 0;
+
+  for (let i = 1; i < data.length; i++) {  // skip header row 0
+    const stt   = String(data[i][0]).trim();
+    const title = String(data[i][1]).trim();
+
+    // 1) Row có STT thuộc danh sách xoá
+    if (STT_REMOVE.indexOf(stt) >= 0) {
+      rowsToDelete.push(i + 1);
+      continue;
+    }
+    // 2) Row tiêu đề con cần xoá (STT rỗng + tên match)
+    if (!stt && TITLE_REMOVE.indexOf(title) >= 0) {
+      rowsToDelete.push(i + 1);
+      continue;
+    }
+    // 3) Row tiêu đề nhóm 9 cũ → đổi tên
+    if (!stt && title === OLD_GROUP_TITLE) {
+      sh.getRange(i + 1, 2).setValue(NEW_GROUP_TITLE);
+      Logger.log('[cleanup] Đổi tiêu đề nhóm 9 ở row ' + (i + 1) + ': "' + OLD_GROUP_TITLE + '" → "' + NEW_GROUP_TITLE + '"');
+      updatedCount++;
+      continue;
+    }
+    // 4) Row STT 94 → cập nhật tên + xoá link Drive cũ
+    if (stt === '94') {
+      const oldTitle = title;
+      const oldLink  = String(data[i][2]).trim();
+      let touched = false;
+      if (oldTitle !== NEW_94_TITLE) {
+        sh.getRange(i + 1, 2).setValue(NEW_94_TITLE);
+        touched = true;
+      }
+      // Xoá link nếu là link cũ của TH Diễn Liên (folder ID 1_sJC3VBwib...)
+      if (oldLink.indexOf('1_sJC3VBwib') >= 0 || oldLink.indexOf('1_sJC3VBwibhuaGA-mIMB5kT81OGD4bE') >= 0) {
+        sh.getRange(i + 1, 3).setValue('');
+        touched = true;
+      }
+      if (touched) {
+        Logger.log('[cleanup] Cập nhật mục 94 ở row ' + (i + 1) + ': tên="' + NEW_94_TITLE + '", link đã xoá nếu trỏ về Diễn Liên');
+        updatedCount++;
+      }
+    }
+  }
+
+  // Xoá rows từ DƯỚI LÊN để index không lệch
+  rowsToDelete.sort(function (a, b) { return b - a; });
+  rowsToDelete.forEach(function (r) {
+    sh.deleteRow(r);
+    Logger.log('[cleanup] Đã xoá row ' + r);
+  });
+
+  const summary = '[cleanup] DONE — xoá ' + rowsToDelete.length + ' row, cập nhật ' + updatedCount + ' row.';
+  Logger.log(summary);
+
+  // Hiện thông báo cho user
+  try {
+    SpreadsheetApp.getUi().alert('Dọn nhóm 9 hoàn tất', summary, SpreadsheetApp.getUi().ButtonSet.OK);
+  } catch (e) { /* nếu chạy không có UI thì bỏ qua */ }
+
+  return { ok: true, deleted: rowsToDelete.length, updated: updatedCount };
+}
+
+// Sinh password ngẫu nhiên dễ đọc (loại các ký tự dễ nhầm: 0/O, 1/l/I)
+function _seedAdminGenPassword_(n) {
+  n = n || 12;
+  const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  const lower = 'abcdefghijkmnpqrstuvwxyz';
+  const digit = '23456789';
+  const symbol = '@#$%&!';
+  const all = upper + lower + digit + symbol;
+  // Đảm bảo có đủ 4 nhóm ký tự
+  let pwd = upper.charAt(Math.floor(Math.random() * upper.length))
+          + lower.charAt(Math.floor(Math.random() * lower.length))
+          + digit.charAt(Math.floor(Math.random() * digit.length))
+          + symbol.charAt(Math.floor(Math.random() * symbol.length));
+  for (let i = 4; i < n; i++) pwd += all.charAt(Math.floor(Math.random() * all.length));
+  // Trộn ngẫu nhiên các vị trí (Fisher-Yates)
+  const arr = pwd.split('');
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+  }
+  return arr.join('');
 }
 
 /**
