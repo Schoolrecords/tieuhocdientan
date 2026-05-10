@@ -96,7 +96,7 @@
   (document.head || document.documentElement).appendChild(s);
 })();
 </script>
-<link rel="stylesheet" href="style.css?v=2026.05.10-cbgv-landing">
+<link rel="stylesheet" href="style.css?v=2026.05.11-guide-qlcl-mobile">
 <style>
 /* Eye toggle cho password input — 2026-05-09 */
 .pw-wrap{position:relative;display:block}
@@ -322,15 +322,67 @@ function pwToggle(btn){
     <div class="guide-panel active" id="guideUse">
       <div class="step-grid">
 
+        <!-- ═══ DIVIDER: GIỚI THIỆU CHUNG ═══ -->
+        <div class="step-divider">
+          <div class="sd-ico">🧭</div>
+          <div class="sd-text">
+            <h3>Phần 1 · Tổng quan thanh menu</h3>
+            <p>Trang Hồ sơ số có 8 mục. Mỗi mục là một "phòng" riêng biệt — bạn chọn phòng cần làm việc rồi vào.</p>
+          </div>
+        </div>
+
         <!-- Bước 1: Chọn mục -->
         <div class="step-card full">
           <div class="step-illust">
             <span class="step-num">1</span>
-            <svg viewBox="0 0 560 120" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="540" height="40" rx="10" fill="#1e6b54"/><circle cx="30" cy="30" r="12" fill="#fdfbf4"/><text x="30" y="34" font-size="10" text-anchor="middle">📚</text><text x="140" y="34" font-size="9" fill="rgba(255,255,255,.85)" text-anchor="middle" font-family="sans-serif">Trang chủ</text><rect x="170" y="24" width="1" height="12" fill="rgba(255,255,255,.2)"/><text x="210" y="34" font-size="9" fill="#ffd66b" text-anchor="middle" font-family="sans-serif" font-weight="bold">Hồ sơ số</text><rect x="245" y="24" width="1" height="12" fill="rgba(255,255,255,.2)"/><text x="290" y="34" font-size="9" fill="rgba(255,255,255,.85)" text-anchor="middle" font-family="sans-serif">Quản lý HS</text><rect x="330" y="24" width="1" height="12" fill="rgba(255,255,255,.2)"/><text x="380" y="34" font-size="9" fill="rgba(255,255,255,.85)" text-anchor="middle" font-family="sans-serif">Hồ sơ CBGVNV</text><rect x="420" y="24" width="1" height="12" fill="rgba(255,255,255,.2)"/><text x="468" y="34" font-size="9" fill="rgba(255,255,255,.85)" text-anchor="middle" font-family="sans-serif">Hướng dẫn</text><text x="280" y="80" font-size="11" fill="#2d8a6e" text-anchor="middle" font-family="sans-serif" font-weight="bold">👆 Nhấn vào tên mục trên thanh menu để chuyển đến phần tương ứng</text><text x="280" y="100" font-size="9" fill="#6b7a72" text-anchor="middle" font-family="sans-serif">Trên điện thoại: nhấn nút ☰ góc phải → chọn mục</text></svg>
+            <svg viewBox="0 0 680 150" xmlns="http://www.w3.org/2000/svg">
+              <rect x="10" y="10" width="660" height="42" rx="10" fill="#1e6b54"/>
+              <circle cx="32" cy="31" r="12" fill="#fdfbf4"/>
+              <text x="32" y="35" font-size="11" text-anchor="middle">📚</text>
+              <text x="92" y="35" font-size="9" fill="rgba(255,255,255,.85)" text-anchor="middle" font-family="sans-serif">Trang chủ</text>
+              <rect x="125" y="24" width="1" height="14" fill="rgba(255,255,255,.18)"/>
+              <text x="156" y="35" font-size="9" fill="rgba(255,255,255,.85)" text-anchor="middle" font-family="sans-serif">Giới thiệu</text>
+              <rect x="190" y="24" width="1" height="14" fill="rgba(255,255,255,.18)"/>
+              <text x="222" y="35" font-size="9" fill="#ffd66b" text-anchor="middle" font-family="sans-serif" font-weight="bold">Hồ sơ số</text>
+              <rect x="258" y="24" width="1" height="14" fill="rgba(255,255,255,.18)"/>
+              <rect x="266" y="20" width="98" height="22" rx="11" fill="rgba(169,215,240,.25)" stroke="#a9d7f0"/>
+              <text x="315" y="35" font-size="8.5" fill="#cfe8fa" text-anchor="middle" font-family="sans-serif" font-weight="bold">🏅 KĐCL-TĐG</text>
+              <rect x="370" y="20" width="108" height="22" rx="11" fill="rgba(168,200,240,.45)" stroke="#7da8e0"/>
+              <text x="424" y="35" font-size="8.5" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">📊 QL Chất lượng</text>
+              <rect x="484" y="24" width="1" height="14" fill="rgba(255,255,255,.18)"/>
+              <text x="526" y="35" font-size="9" fill="rgba(255,255,255,.85)" text-anchor="middle" font-family="sans-serif">Hồ sơ CBGVNV</text>
+              <rect x="568" y="24" width="1" height="14" fill="rgba(255,255,255,.18)"/>
+              <text x="601" y="35" font-size="9" fill="rgba(255,255,255,.85)" text-anchor="middle" font-family="sans-serif">Quản lý HS</text>
+              <rect x="634" y="24" width="1" height="14" fill="rgba(255,255,255,.18)"/>
+              <text x="654" y="35" font-size="9" fill="rgba(255,255,255,.85)" text-anchor="middle" font-family="sans-serif">📖</text>
+              <text x="340" y="92" font-size="12" fill="#2d8a6e" text-anchor="middle" font-family="sans-serif" font-weight="bold">👆 Nhấn vào tên mục trên thanh menu để chuyển đến phần tương ứng</text>
+              <text x="340" y="115" font-size="10" fill="#6b7a72" text-anchor="middle" font-family="sans-serif">Có 2 mục mở <tspan font-weight="bold" fill="#1a4466">tab mới</tspan>: 🏅 KĐCL-TĐG và 📊 QL Chất lượng</text>
+              <text x="340" y="135" font-size="9" fill="#8a9690" text-anchor="middle" font-family="sans-serif">📱 Trên điện thoại: nhấn nút ☰ góc phải → chọn mục</text>
+            </svg>
           </div>
           <div class="step-body">
-            <h4>Chọn mục cần xem trên thanh menu</h4>
-            <p>Nhấn vào tên mục trên thanh menu phía trên: <b>Hồ sơ số</b>, <b>Quản lý HS</b>, <b>Hồ sơ CBGVNV</b>, <b>Hướng dẫn</b>. Trang sẽ tự cuộn đến phần tương ứng. Trên điện thoại, nhấn nút <b>☰</b> ở góc phải để mở menu.</p>
+            <h4>Thanh menu chính có 8 mục</h4>
+            <p>Nhấn vào tên mục trên thanh menu để đi đến phần tương ứng:</p>
+            <ul class="step-sublist">
+              <li>📚 <b>Trang chủ</b> — ảnh trường, slogan, thống kê tổng quan.</li>
+              <li>❤ <b>Giới thiệu</b> — thông tin tóm tắt về nhà trường.</li>
+              <li>📋 <b>Hồ sơ số</b> — kho lưu trữ 109 hồ sơ trên Google Drive.</li>
+              <li>🏅 <b>Hệ thống KĐCL-TĐG</b> — <i>mở tab mới</i>, công cụ tự đánh giá theo TT 17/2018 + TT 22/2024.</li>
+              <li>📊 <b>QL Chất lượng</b> — <i>mở tab mới</i>, hệ thống nhập điểm + học bạ + đồng bộ MOET (xem Phần 3).</li>
+              <li>👨‍🏫 <b>Hồ sơ CBGVNV</b> — danh sách BGH / GV / NV của trường.</li>
+              <li>👥 <b>Quản lý HS</b> — danh sách học sinh theo khối, lớp.</li>
+              <li>📖 <b>Hướng dẫn</b> — mở hộp thoại bạn đang xem.</li>
+            </ul>
+            <div class="step-tip">📱 <b>Trên điện thoại:</b> thanh menu thu gọn — nhấn nút <b>☰</b> ở góc phải để mở menu dạng cột bên.</div>
+          </div>
+        </div>
+
+        <!-- ═══ DIVIDER: HỆ THỐNG HỒ SƠ SỐ (HSS) ═══ -->
+        <div class="step-divider">
+          <div class="sd-ico">📋</div>
+          <div class="sd-text">
+            <h3>Phần 2 · Hệ thống Hồ sơ số (HSS)</h3>
+            <p>Lưu 109 hồ sơ trên Google Drive, chia theo 11 nhóm chức năng — Hiệu trưởng, Phó hiệu trưởng, Tổ CM, Hành chính, Kế toán, Đảng, Đội, BĐD CMHS, CBGVNV, KĐCL, ĐBCL.</p>
           </div>
         </div>
 
@@ -343,12 +395,12 @@ function pwToggle(btn){
           <div class="step-body">
             <h4>Xem danh mục Hồ sơ số</h4>
             <p>Cuộn đến mục <b>"Hồ sơ số"</b>. Ở đầu mục có <b>3 ô truy cập nhanh</b>:</p>
-            <ul style="padding-left:18px;margin:6px 0 10px;color:#3a4a42;font-size:.88rem;line-height:1.6">
+            <ul class="step-sublist">
               <li>📋 <b>Tổng quan Danh mục Hồ sơ số</b> — xem toàn bộ 109 hồ sơ chia theo 11 nhóm.</li>
               <li>🏅 <b>Hệ thống Kiểm định Chất lượng</b> — mở trang KĐCL ở tab mới (xem Bước 4).</li>
               <li>🎗️ <b>Danh mục Minh chứng</b> — tra cứu 95 minh chứng KĐCL theo 5 tiêu chuẩn.</li>
             </ul>
-            <p>Phía dưới là danh mục chi tiết — nhấn vào thẻ nhóm (VD: "Tổ chức & quản lý") → danh sách hồ sơ con hiện ra. Dùng <b>ô tìm kiếm</b> để lọc nhanh (VD: "thi đua", "1.2.1").</p>
+            <p>Phía dưới là danh mục chi tiết — nhấn vào thẻ nhóm (VD: "Tổ chức &amp; quản lý") → danh sách hồ sơ con hiện ra. Dùng <b>ô tìm kiếm</b> để lọc nhanh (VD: "thi đua", "1.2.1").</p>
           </div>
         </div>
 
@@ -402,8 +454,8 @@ function pwToggle(btn){
             <p>Đây là <b>hệ thống riêng</b> phục vụ quy trình Kiểm định chất lượng giáo dục theo <b>Thông tư 17/2018/TT-BGDĐT</b> (sửa đổi bởi TT 22/2024) và hướng dẫn tại <b>Công văn 5942/BGDĐT-QLCL</b>. Mở trong một tab riêng, <b>trang Hồ sơ số hiện tại vẫn còn nguyên</b> trên thanh công cụ — bạn có thể qua lại giữa 2 hệ thống thoải mái.</p>
             <p style="margin-top:8px"><b>Cách mở:</b> Vào mục <b>"Hồ sơ số"</b> → nhấn ô giữa <b>"🏅 Hệ thống Kiểm định Chất lượng"</b> (nền xanh dương) → tab mới mở ra với trang KĐCL.</p>
             <p style="margin-top:8px"><b>Các chức năng chính trong hệ thống KĐCL:</b></p>
-            <ul style="padding-left:18px;margin:6px 0 10px;color:#3a4a42;font-size:.88rem;line-height:1.7">
-              <li><b>Tự đánh giá (TĐG)</b> — Nhập Phiếu phân tích tiêu chí & xác định nội hàm cho từng tiêu chí trong 5 tiêu chuẩn (17 tiêu chí).</li>
+            <ul class="step-sublist">
+              <li><b>Tự đánh giá (TĐG)</b> — Nhập Phiếu phân tích tiêu chí &amp; xác định nội hàm cho từng tiêu chí trong 5 tiêu chuẩn (17 tiêu chí).</li>
               <li><b>Phiếu đánh giá tiêu chí</b> — Đánh giá theo 4 mức độ cho từng tiêu chí, tự động tính kết quả.</li>
               <li><b>Quản lý Minh chứng</b> — Thêm / sửa / xóa mã minh chứng <code>[H1-1.1-01]</code>, gắn link Drive, liên kết tới hồ sơ HSS.</li>
               <li><b>Xuất Báo cáo TĐG</b> — Kết xuất văn bản Word/PDF chuẩn thể thức (NĐ 30/2020) để nộp cấp trên.</li>
@@ -413,39 +465,481 @@ function pwToggle(btn){
           </div>
         </div>
 
-        <!-- Bước 5: Quản lý học sinh -->
+        <!-- ═══ DIVIDER: HỆ THỐNG QL CHẤT LƯỢNG (QLCL) ═══ -->
+        <div class="step-divider qlcl">
+          <div class="sd-ico">📊</div>
+          <div class="sd-text">
+            <h3>Phần 3 · Hệ thống QL Chất lượng (QLCL) — nhập điểm + Học bạ + MOET</h3>
+            <p>Sổ điểm số, sổ NLPC, nhận xét HS theo TT 27/2020; xuất Học bạ Word đúng mẫu Bộ; <b>đồng bộ tự động</b> kết quả lên CSDL ngành (MOET) qua Chrome Extension.</p>
+          </div>
+        </div>
+
+        <!-- Bước 5: Mở & Đăng nhập QLCL -->
+        <div class="step-card full qlcl-step">
+          <div class="step-illust">
+            <span class="step-num">5</span>
+            <svg viewBox="0 0 560 170" xmlns="http://www.w3.org/2000/svg">
+              <!-- Mock tab browser với QLCL -->
+              <rect x="20" y="10" width="200" height="24" rx="6 6 0 0" fill="#7da8e0" stroke="#3858a8"/>
+              <text x="34" y="26" font-size="9" fill="#fff" font-family="sans-serif">📊</text>
+              <text x="120" y="26" font-size="9" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">QL Chất lượng GDTH</text>
+              <circle cx="208" cy="22" r="4" fill="none" stroke="#fff"/>
+              <text x="208" y="25" font-size="7" fill="#fff" text-anchor="middle">×</text>
+              <!-- Sidebar -->
+              <rect x="20" y="34" width="140" height="126" rx="0 0 0 8" fill="#1a4466"/>
+              <rect x="28" y="42" width="124" height="22" rx="5" fill="rgba(255,255,255,.1)"/>
+              <text x="34" y="56" font-size="7.5" fill="#fff" font-family="sans-serif" font-weight="bold">🏫 TH Diễn Tân</text>
+              <text x="28" y="76" font-size="6.5" fill="rgba(255,255,255,.55)" font-family="sans-serif">KỲ ĐÁNH GIÁ</text>
+              <rect x="28" y="80" width="28" height="20" rx="4" fill="rgba(255,255,255,.1)"/>
+              <text x="42" y="92" font-size="6.5" fill="rgba(255,255,255,.7)" text-anchor="middle" font-family="sans-serif">GHK1</text>
+              <rect x="59" y="80" width="28" height="20" rx="4" fill="rgba(255,255,255,.1)"/>
+              <text x="73" y="92" font-size="6.5" fill="rgba(255,255,255,.7)" text-anchor="middle" font-family="sans-serif">CHK1</text>
+              <rect x="90" y="80" width="28" height="20" rx="4" fill="#ffd66b"/>
+              <text x="104" y="92" font-size="6.5" fill="#1a4466" text-anchor="middle" font-family="sans-serif" font-weight="bold">GHK2</text>
+              <rect x="121" y="80" width="28" height="20" rx="4" fill="rgba(255,255,255,.1)"/>
+              <text x="135" y="92" font-size="6.5" fill="rgba(255,255,255,.7)" text-anchor="middle" font-family="sans-serif">CN</text>
+              <text x="28" y="115" font-size="6.5" fill="rgba(255,255,255,.55)" font-family="sans-serif">QUẢN LÝ CHẤT LƯỢNG</text>
+              <text x="28" y="128" font-size="7.5" fill="#fff" font-family="sans-serif">👥 Học sinh</text>
+              <text x="28" y="140" font-size="7.5" fill="#ffd66b" font-family="sans-serif" font-weight="bold">✏️ Nhập kết quả</text>
+              <text x="28" y="152" font-size="7.5" fill="rgba(255,255,255,.85)" font-family="sans-serif">📊 Trạng thái</text>
+              <!-- Login box -->
+              <rect x="180" y="44" width="360" height="114" rx="10" fill="#fff" stroke="#cfdaee"/>
+              <text x="360" y="62" font-size="10" fill="#1a4466" text-anchor="middle" font-family="sans-serif" font-weight="bold">🏫 Đăng nhập QLCL</text>
+              <rect x="220" y="72" width="280" height="20" rx="6" fill="#f5f7fb" stroke="#cfdaee"/>
+              <text x="228" y="85" font-size="7.5" fill="#8a9690" font-family="sans-serif">Tên đăng nhập (do Admin cấp)</text>
+              <rect x="220" y="96" width="280" height="20" rx="6" fill="#f5f7fb" stroke="#cfdaee"/>
+              <text x="228" y="109" font-size="7.5" fill="#8a9690" font-family="sans-serif">Mật khẩu  ••••••••</text>
+              <rect x="220" y="124" width="280" height="22" rx="11" fill="#3858a8"/>
+              <text x="360" y="138" font-size="8" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">Đăng nhập</text>
+            </svg>
+          </div>
+          <div class="step-body">
+            <h4>📊 Mở &amp; Đăng nhập hệ thống QL Chất lượng</h4>
+            <p><b>Cách mở:</b> Trên thanh menu, nhấn ô <b>"📊 QL Chất lượng"</b> (nền xanh đậm) → tab mới mở trang QLCL. Trang Hồ sơ số vẫn giữ nguyên.</p>
+            <p style="margin-top:8px"><b>Đăng nhập:</b></p>
+            <ul class="step-sublist">
+              <li><b>Tên đăng nhập + mật khẩu</b> do <b>Admin</b> (Hiệu trưởng/PHT) cấp qua Zalo nhóm trường.</li>
+              <li>Mỗi máy/điện thoại chỉ cần đăng nhập <b>một lần</b> — lần sau tự động bỏ qua.</li>
+              <li>Quên mật khẩu → liên hệ HT/PHT để cấp lại.</li>
+            </ul>
+            <p style="margin-top:8px"><b>Chọn kỳ đánh giá</b> ở góc trên bên trái — gồm 4 kỳ:</p>
+            <ul class="step-sublist">
+              <li><b>Giữa HK1 (GHK1)</b> — kiểm tra giữa kỳ 1, không có điểm số, chỉ nhận xét.</li>
+              <li><b>Cuối HK1 (CHK1)</b> — có điểm Toán/Tiếng Việt + nhận xét.</li>
+              <li><b>Giữa HK2 (GHK2)</b> — giống GHK1.</li>
+              <li><b>Cuối năm (CN)</b> — đầy đủ điểm + xếp loại HTXS/HTT/HT/CHT.</li>
+            </ul>
+            <div class="step-warn">⚠ <b>Lưu ý vai trò:</b> Giáo viên chỉ thấy lớp mình chủ nhiệm. Admin (HT/PHT) thấy toàn trường + có thể khoá/mở kỳ điểm.</div>
+          </div>
+        </div>
+
+        <!-- Bước 6: Nhập điểm + NLPC -->
+        <div class="step-card full qlcl-step">
+          <div class="step-illust">
+            <span class="step-num">6</span>
+            <svg viewBox="0 0 600 220" xmlns="http://www.w3.org/2000/svg">
+              <!-- Tab header -->
+              <text x="300" y="14" font-size="9.5" fill="#1a4466" text-anchor="middle" font-family="sans-serif" font-weight="bold">SỔ ĐIỂM &amp; NĂNG LỰC – PHẨM CHẤT (TT 27/2020)</text>
+              <!-- Lớp chooser -->
+              <rect x="20" y="22" width="80" height="20" rx="10" fill="#fff" stroke="#3858a8"/>
+              <text x="60" y="36" font-size="8" fill="#1a4466" text-anchor="middle" font-family="sans-serif" font-weight="bold">Lớp 3A</text>
+              <rect x="106" y="22" width="80" height="20" rx="10" fill="#f5f7fb" stroke="#cfdaee"/>
+              <text x="146" y="36" font-size="8" fill="#6b7a72" text-anchor="middle" font-family="sans-serif">Lớp 3B</text>
+              <text x="540" y="36" font-size="8" fill="#1e6b54" text-anchor="end" font-family="sans-serif">💾 Tự động lưu</text>
+              <!-- Bảng điểm -->
+              <rect x="20" y="50" width="560" height="22" fill="#1a4466"/>
+              <text x="30" y="64" font-size="7.5" fill="#fff" font-family="sans-serif" font-weight="bold">Họ và tên</text>
+              <text x="170" y="64" font-size="7.5" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">Toán</text>
+              <text x="220" y="64" font-size="7.5" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">T.Việt</text>
+              <text x="260" y="64" font-size="7.5" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">Đ.đức</text>
+              <text x="300" y="64" font-size="7.5" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">TN-XH</text>
+              <text x="340" y="64" font-size="7.5" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">N.ngữ</text>
+              <text x="380" y="64" font-size="7.5" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">Â.nhạc</text>
+              <text x="420" y="64" font-size="7.5" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">Tự chủ</text>
+              <text x="460" y="64" font-size="7.5" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">Y.nước</text>
+              <text x="500" y="64" font-size="7.5" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">Xếp loại</text>
+              <text x="555" y="64" font-size="7.5" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">N.xét</text>
+              <!-- Row 1 -->
+              <rect x="20" y="72" width="560" height="24" fill="#fff" stroke="#eef2ef"/>
+              <text x="30" y="87" font-size="7.5" fill="#1e293b" font-family="sans-serif">Nguyễn An</text>
+              <rect x="150" y="76" width="40" height="16" rx="4" fill="#dcfce7" stroke="#16a34a"/>
+              <text x="170" y="87" font-size="7.5" fill="#15803d" text-anchor="middle" font-family="sans-serif" font-weight="bold">T · 9</text>
+              <rect x="200" y="76" width="40" height="16" rx="4" fill="#dcfce7" stroke="#16a34a"/>
+              <text x="220" y="87" font-size="7.5" fill="#15803d" text-anchor="middle" font-family="sans-serif" font-weight="bold">T · 10</text>
+              <text x="260" y="88" font-size="9" fill="#16a34a" text-anchor="middle" font-family="sans-serif" font-weight="bold">T</text>
+              <text x="300" y="88" font-size="9" fill="#16a34a" text-anchor="middle" font-family="sans-serif" font-weight="bold">T</text>
+              <text x="340" y="88" font-size="9" fill="#16a34a" text-anchor="middle" font-family="sans-serif" font-weight="bold">T</text>
+              <text x="380" y="88" font-size="9" fill="#16a34a" text-anchor="middle" font-family="sans-serif" font-weight="bold">T</text>
+              <text x="420" y="88" font-size="9" fill="#0ea5e9" text-anchor="middle" font-family="sans-serif" font-weight="bold">T</text>
+              <text x="460" y="88" font-size="9" fill="#0ea5e9" text-anchor="middle" font-family="sans-serif" font-weight="bold">T</text>
+              <rect x="478" y="76" width="44" height="16" rx="8" fill="#fef3c7"/>
+              <text x="500" y="87" font-size="7" fill="#a16207" text-anchor="middle" font-family="sans-serif" font-weight="bold">HTXS</text>
+              <text x="555" y="88" font-size="11" fill="#3858a8" text-anchor="middle" font-family="sans-serif">📝</text>
+              <!-- Row 2 -->
+              <rect x="20" y="96" width="560" height="24" fill="#f8fafc" stroke="#eef2ef"/>
+              <text x="30" y="111" font-size="7.5" fill="#1e293b" font-family="sans-serif">Trần Bình</text>
+              <rect x="150" y="100" width="40" height="16" rx="4" fill="#fef3c7" stroke="#d97706"/>
+              <text x="170" y="111" font-size="7.5" fill="#a16207" text-anchor="middle" font-family="sans-serif" font-weight="bold">H · 7</text>
+              <rect x="200" y="100" width="40" height="16" rx="4" fill="#fef3c7" stroke="#d97706"/>
+              <text x="220" y="111" font-size="7.5" fill="#a16207" text-anchor="middle" font-family="sans-serif" font-weight="bold">H · 6</text>
+              <text x="260" y="112" font-size="9" fill="#16a34a" text-anchor="middle" font-family="sans-serif" font-weight="bold">T</text>
+              <text x="300" y="112" font-size="9" fill="#d97706" text-anchor="middle" font-family="sans-serif" font-weight="bold">H</text>
+              <text x="340" y="112" font-size="9" fill="#d97706" text-anchor="middle" font-family="sans-serif" font-weight="bold">H</text>
+              <text x="380" y="112" font-size="9" fill="#16a34a" text-anchor="middle" font-family="sans-serif" font-weight="bold">T</text>
+              <text x="420" y="112" font-size="9" fill="#0ea5e9" text-anchor="middle" font-family="sans-serif" font-weight="bold">Đ</text>
+              <text x="460" y="112" font-size="9" fill="#0ea5e9" text-anchor="middle" font-family="sans-serif" font-weight="bold">Đ</text>
+              <rect x="478" y="100" width="44" height="16" rx="8" fill="#dbeafe"/>
+              <text x="500" y="111" font-size="7" fill="#1e40af" text-anchor="middle" font-family="sans-serif" font-weight="bold">HT</text>
+              <text x="555" y="112" font-size="11" fill="#3858a8" text-anchor="middle" font-family="sans-serif">📝</text>
+              <!-- Row 3 -->
+              <rect x="20" y="120" width="560" height="24" fill="#fff" stroke="#eef2ef"/>
+              <text x="30" y="135" font-size="7.5" fill="#1e293b" font-family="sans-serif">Lê Cường</text>
+              <rect x="150" y="124" width="40" height="16" rx="4" fill="#dcfce7" stroke="#16a34a"/>
+              <text x="170" y="135" font-size="7.5" fill="#15803d" text-anchor="middle" font-family="sans-serif" font-weight="bold">T · 9</text>
+              <rect x="200" y="124" width="40" height="16" rx="4" fill="#dcfce7" stroke="#16a34a"/>
+              <text x="220" y="135" font-size="7.5" fill="#15803d" text-anchor="middle" font-family="sans-serif" font-weight="bold">T · 9</text>
+              <text x="260" y="136" font-size="9" fill="#16a34a" text-anchor="middle" font-family="sans-serif" font-weight="bold">T</text>
+              <text x="300" y="136" font-size="9" fill="#16a34a" text-anchor="middle" font-family="sans-serif" font-weight="bold">T</text>
+              <text x="340" y="136" font-size="9" fill="#16a34a" text-anchor="middle" font-family="sans-serif" font-weight="bold">T</text>
+              <text x="380" y="136" font-size="9" fill="#16a34a" text-anchor="middle" font-family="sans-serif" font-weight="bold">T</text>
+              <text x="420" y="136" font-size="9" fill="#0ea5e9" text-anchor="middle" font-family="sans-serif" font-weight="bold">T</text>
+              <text x="460" y="136" font-size="9" fill="#0ea5e9" text-anchor="middle" font-family="sans-serif" font-weight="bold">T</text>
+              <rect x="478" y="124" width="44" height="16" rx="8" fill="#bbf7d0"/>
+              <text x="500" y="135" font-size="7" fill="#15803d" text-anchor="middle" font-family="sans-serif" font-weight="bold">HTT</text>
+              <text x="555" y="136" font-size="11" fill="#3858a8" text-anchor="middle" font-family="sans-serif">📝</text>
+              <!-- Legend -->
+              <rect x="20" y="156" width="560" height="56" rx="10" fill="#eff6ff" stroke="#bfdbfe"/>
+              <text x="30" y="172" font-size="8" fill="#1a4466" font-family="sans-serif" font-weight="bold">CHÚ THÍCH MỨC ĐẠT (theo TT 27/2020/TT-BGDĐT)</text>
+              <rect x="30" y="178" width="14" height="14" rx="3" fill="#16a34a"/>
+              <text x="48" y="189" font-size="7" fill="#1e293b" font-family="sans-serif"><tspan font-weight="bold">T</tspan> = Hoàn thành Tốt</text>
+              <rect x="170" y="178" width="14" height="14" rx="3" fill="#d97706"/>
+              <text x="188" y="189" font-size="7" fill="#1e293b" font-family="sans-serif"><tspan font-weight="bold">H</tspan> = Hoàn thành</text>
+              <rect x="290" y="178" width="14" height="14" rx="3" fill="#dc2626"/>
+              <text x="308" y="189" font-size="7" fill="#1e293b" font-family="sans-serif"><tspan font-weight="bold">C</tspan> = Chưa hoàn thành (môn học)</text>
+              <text x="30" y="204" font-size="7" fill="#1a4466" font-family="sans-serif"><tspan font-weight="bold">Năng lực · Phẩm chất:</tspan> T = Tốt · Đ = Đạt · C = Cần cố gắng (chữ xanh dương)</text>
+              <text x="300" y="204" font-size="7" fill="#1a4466" font-family="sans-serif"><tspan font-weight="bold">Xếp loại HS:</tspan> HTXS · HTT · HT · CHT (theo Điều 9 TT 27)</text>
+            </svg>
+          </div>
+          <div class="step-body">
+            <h4>✏️ Nhập kết quả: Sổ điểm + Năng lực, Phẩm chất + Nhận xét</h4>
+            <p>Vào sidebar trái → nhấn <b>"✏️ Nhập kết quả"</b> → chọn <b>lớp</b> ở thanh phía trên → bảng nhập điểm hiện ra.</p>
+            <p style="margin-top:8px"><b>Mỗi học sinh có 3 cụm dữ liệu:</b></p>
+            <ul class="step-sublist">
+              <li><b>Môn học (T/H/C):</b> Toán, Tiếng Việt (có thêm điểm số 1–10 ở KTĐK); Đạo đức, TN-XH, Ngoại ngữ, Tin học, Âm nhạc, Mĩ thuật, HĐ trải nghiệm, GDTC… chỉ ghi mức đạt T/H/C.</li>
+              <li><b>Năng lực (T/Đ/C) — 8 năng lực chung + chuyên môn:</b> Tự chủ &amp; tự học, Giao tiếp &amp; hợp tác, Giải quyết vấn đề &amp; sáng tạo, Ngôn ngữ, Tính toán, Khoa học, Thẩm mĩ, Thể chất.</li>
+              <li><b>Phẩm chất (T/Đ/C) — 5 phẩm chất:</b> Yêu nước, Nhân ái, Chăm chỉ, Trung thực, Trách nhiệm.</li>
+            </ul>
+            <p style="margin-top:8px"><b>Thao tác nhập:</b> Nhấn vào ô cần sửa → gõ T / H / C (môn học) hoặc T / Đ / C (NLPC). Hệ thống <b>tự động lưu</b> sau mỗi 2 giây — không cần bấm nút Save. Chấm 📝 cuối hàng mở hộp nhập <b>lời nhận xét</b>.</p>
+            <p style="margin-top:8px"><b>Hệ thống tự tính:</b> Xếp loại cuối kỳ (HTXS / HTT / HT / CHT) theo Điều 9 TT 27/2020 dựa trên điểm Toán/T.Việt + mức đạt các môn + NLPC.</p>
+            <div class="step-tip">💡 <b>Mẹo:</b> Dùng phím <kbd style="padding:1px 6px;border:1px solid #ccc;border-radius:3px;background:#f8f8f8;font-size:.78rem">Tab</kbd> để chuyển ô sang phải, <kbd style="padding:1px 6px;border:1px solid #ccc;border-radius:3px;background:#f8f8f8;font-size:.78rem">↓</kbd> để xuống học sinh kế tiếp. Nhập nhanh cả lớp trong vài phút.</div>
+            <div class="step-warn">⚠ <b>Cảnh báo:</b> Khi kỳ điểm đã <b>khoá</b> (chấm đỏ ở sidebar) — chỉ Admin mới được phép sửa. GV cần báo HT/PHT mở khoá lại nếu phát hiện sai sót.</div>
+          </div>
+        </div>
+
+        <!-- Bước 7: Xuất Học bạ Word -->
+        <div class="step-card qlcl-step">
+          <div class="step-illust">
+            <span class="step-num">7</span>
+            <svg viewBox="0 0 320 170" xmlns="http://www.w3.org/2000/svg">
+              <text x="160" y="14" font-size="9" fill="#1a4466" text-anchor="middle" font-family="sans-serif" font-weight="bold">QUẢN LÝ HỌC BẠ TT 27</text>
+              <!-- Khối tabs -->
+              <rect x="20" y="22" width="50" height="18" rx="9" fill="#3858a8"/>
+              <text x="45" y="34" font-size="7.5" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">Khối 1</text>
+              <rect x="76" y="22" width="50" height="18" rx="9" fill="#f5f7fb" stroke="#cfdaee"/>
+              <text x="101" y="34" font-size="7.5" fill="#6b7a72" text-anchor="middle" font-family="sans-serif">Khối 2</text>
+              <rect x="132" y="22" width="50" height="18" rx="9" fill="#f5f7fb" stroke="#cfdaee"/>
+              <text x="157" y="34" font-size="7.5" fill="#6b7a72" text-anchor="middle" font-family="sans-serif">Khối 3</text>
+              <rect x="240" y="22" width="60" height="18" rx="9" fill="#16a34a"/>
+              <text x="270" y="34" font-size="7.5" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">⬇ Xuất ALL</text>
+              <!-- HS row 1 -->
+              <rect x="20" y="48" width="280" height="34" rx="6" fill="#fff" stroke="#cfdaee"/>
+              <circle cx="36" cy="65" r="9" fill="#dbeafe"/>
+              <text x="36" y="68" font-size="9" fill="#1a4466" text-anchor="middle" font-family="sans-serif" font-weight="bold">A</text>
+              <text x="52" y="62" font-size="8" fill="#1e293b" font-family="sans-serif" font-weight="bold">Nguyễn An</text>
+              <text x="52" y="73" font-size="6.5" fill="#6b7a72" font-family="sans-serif">Lớp 1A · MS 0123456789</text>
+              <rect x="216" y="56" width="36" height="18" rx="4" fill="#dcfce7" stroke="#16a34a"/>
+              <text x="234" y="68" font-size="7" fill="#15803d" text-anchor="middle" font-family="sans-serif" font-weight="bold">📄 Word</text>
+              <rect x="256" y="56" width="36" height="18" rx="4" fill="#fee2e2" stroke="#dc2626"/>
+              <text x="274" y="68" font-size="7" fill="#991b1b" text-anchor="middle" font-family="sans-serif" font-weight="bold">📕 PDF</text>
+              <!-- HS row 2 -->
+              <rect x="20" y="86" width="280" height="34" rx="6" fill="#fff" stroke="#cfdaee"/>
+              <circle cx="36" cy="103" r="9" fill="#fef3c7"/>
+              <text x="36" y="106" font-size="9" fill="#a16207" text-anchor="middle" font-family="sans-serif" font-weight="bold">B</text>
+              <text x="52" y="100" font-size="8" fill="#1e293b" font-family="sans-serif" font-weight="bold">Trần Bình</text>
+              <text x="52" y="111" font-size="6.5" fill="#6b7a72" font-family="sans-serif">Lớp 1A · MS 0123456790</text>
+              <rect x="216" y="94" width="36" height="18" rx="4" fill="#dcfce7" stroke="#16a34a"/>
+              <text x="234" y="106" font-size="7" fill="#15803d" text-anchor="middle" font-family="sans-serif" font-weight="bold">📄 Word</text>
+              <rect x="256" y="94" width="36" height="18" rx="4" fill="#fee2e2" stroke="#dc2626"/>
+              <text x="274" y="106" font-size="7" fill="#991b1b" text-anchor="middle" font-family="sans-serif" font-weight="bold">📕 PDF</text>
+              <!-- Output preview -->
+              <rect x="20" y="128" width="280" height="36" rx="6" fill="#f0f7ff" stroke="#bfdbfe" stroke-dasharray="3,2"/>
+              <text x="30" y="142" font-size="7" fill="#1e40af" font-family="sans-serif" font-weight="bold">📄 HocBa_NguyenAn_L1A.docx</text>
+              <text x="30" y="154" font-size="6.5" fill="#3858a8" font-family="sans-serif">Đã chèn: Logo, Chữ ký HT, Dấu, Chữ ký GVCN</text>
+            </svg>
+          </div>
+          <div class="step-body">
+            <h4>📋 Xuất Học bạ Word theo mẫu TT 27</h4>
+            <p>Vào <b>"📋 Quản lý học bạ"</b> ở sidebar → chọn <b>Khối</b> → danh sách HS hiện ra → nhấn <b>📄 Word</b> trên từng em để tải về.</p>
+            <ul class="step-sublist">
+              <li>Template học bạ chuẩn TT 27 cho từng khối <b>1, 2, 3, 4, 5</b> (file <code>Mau-HocBa-Lop{N}.docx</code>).</li>
+              <li>Tự động chèn: Tên trường, Xã, Tỉnh, Năm học từ <code>config.js</code>; điểm + nhận xét theo từng học sinh.</li>
+              <li>Tự động chèn <b>ảnh chữ ký HT</b>, <b>dấu trường</b>, <b>chữ ký GVCN</b> đã upload trong <i>"Ảnh chữ ký &amp; dấu"</i>.</li>
+              <li>Nút <b>"⬇ Xuất ALL"</b>: tải toàn bộ học bạ của 1 khối trong 1 file ZIP duy nhất.</li>
+            </ul>
+            <div class="step-tip">💡 <b>Trước khi xuất:</b> Vào Admin (sidebar) → <b>"✍️ Ảnh chữ ký &amp; dấu"</b> → upload đủ 3 ảnh PNG nền trong suốt (HT, Dấu, GVCN). Nếu thiếu, học bạ vẫn xuất được nhưng ô ký để trống.</div>
+          </div>
+        </div>
+
+        <!-- Bước 8: Đồng bộ MOET -->
+        <div class="step-card qlcl-step">
+          <div class="step-illust">
+            <span class="step-num">8</span>
+            <svg viewBox="0 0 320 170" xmlns="http://www.w3.org/2000/svg">
+              <text x="160" y="14" font-size="9" fill="#1a4466" text-anchor="middle" font-family="sans-serif" font-weight="bold">ĐỒNG BỘ KẾT QUẢ LÊN CSDL NGÀNH (MOET)</text>
+              <!-- Box 1: QLCL -->
+              <rect x="14" y="26" width="88" height="60" rx="10" fill="#3858a8"/>
+              <text x="58" y="44" font-size="9" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">📊 QLCL</text>
+              <text x="58" y="58" font-size="6.5" fill="rgba(255,255,255,.85)" text-anchor="middle" font-family="sans-serif">Kết quả</text>
+              <text x="58" y="68" font-size="6.5" fill="rgba(255,255,255,.85)" text-anchor="middle" font-family="sans-serif">đã nhập</text>
+              <rect x="22" y="74" width="72" height="8" rx="4" fill="#ffd66b"/>
+              <!-- Arrow 1 -->
+              <text x="116" y="60" font-size="14" fill="#3858a8" font-family="sans-serif">→</text>
+              <!-- Box 2: Chrome Extension -->
+              <rect x="130" y="26" width="60" height="60" rx="10" fill="#fff" stroke="#3858a8" stroke-width="2"/>
+              <text x="160" y="46" font-size="14" text-anchor="middle">🧩</text>
+              <text x="160" y="63" font-size="7" fill="#1a4466" text-anchor="middle" font-family="sans-serif" font-weight="bold">Chrome</text>
+              <text x="160" y="73" font-size="7" fill="#1a4466" text-anchor="middle" font-family="sans-serif" font-weight="bold">Extension</text>
+              <!-- Arrow 2 -->
+              <text x="202" y="60" font-size="14" fill="#3858a8" font-family="sans-serif">→</text>
+              <!-- Box 3: CSDL ngành -->
+              <rect x="220" y="26" width="88" height="60" rx="10" fill="#16a34a"/>
+              <text x="264" y="46" font-size="14" text-anchor="middle">🏛️</text>
+              <text x="264" y="62" font-size="8" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">CSDL ngành</text>
+              <text x="264" y="74" font-size="6.5" fill="rgba(255,255,255,.85)" text-anchor="middle" font-family="sans-serif">csdl.moet.gov.vn</text>
+              <!-- Process steps -->
+              <rect x="14" y="96" width="294" height="60" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+              <text x="22" y="111" font-size="7" fill="#15803d" font-family="sans-serif" font-weight="bold">⚡ Tự động hoá hoàn toàn (Phương án C):</text>
+              <text x="22" y="124" font-size="6.5" fill="#1e293b" font-family="sans-serif">1️⃣ User login csdl.moet.gov.vn 1 lần (vì có CAPTCHA)</text>
+              <text x="22" y="135" font-size="6.5" fill="#1e293b" font-family="sans-serif">2️⃣ Vào QLCL → "Đồng bộ CSDL ngành" → chọn Khối + Kỳ</text>
+              <text x="22" y="146" font-size="6.5" fill="#1e293b" font-family="sans-serif">3️⃣ Extension tạo Excel + tự upload + click Tải lên</text>
+              <rect x="14" y="160" width="294" height="8" rx="4" fill="#dcfce7"/>
+              <rect x="14" y="160" width="220" height="8" rx="4" fill="#16a34a"/>
+              <text x="160" y="167" font-size="6" fill="#15803d" text-anchor="middle" font-family="sans-serif" font-weight="bold">Hoàn thành 75%</text>
+            </svg>
+          </div>
+          <div class="step-body">
+            <h4>🔄 Đồng bộ tự động lên CSDL ngành (MOET)</h4>
+            <p>Sau khi nhập xong điểm cả trường, không cần điền tay vào CSDL ngành. Hệ thống đẩy <b>tự động</b> qua Chrome Extension.</p>
+            <p style="margin-top:8px"><b>Quy trình 3 bước:</b></p>
+            <ul class="step-sublist">
+              <li><b>1.</b> Cài Chrome Extension <i>"HSS Sync MOET"</i> (file <code>hss-sync-extension/</code> đi kèm template) — chỉ làm 1 lần.</li>
+              <li><b>2.</b> Mở tab mới → vào <code>csdl.moet.gov.vn</code> → đăng nhập (có CAPTCHA, làm thủ công 1 lần).</li>
+              <li><b>3.</b> Quay về tab QLCL → nhấn <b>"🔄 Đồng bộ CSDL ngành"</b> → chọn <b>Khối</b> + <b>Kỳ</b> → bấm <b>"Đẩy lên"</b>. Extension sẽ:
+                <ul style="padding-left:16px;margin:4px 0;color:#3a4a42;line-height:1.55">
+                  <li>Lấy kết quả từ QLCL (qua API Apps Script);</li>
+                  <li>Tạo file Excel 35 cột chuẩn MOET ngay trong bộ nhớ;</li>
+                  <li>Tìm tab CSDL ngành, set dropdown Khối + Kỳ;</li>
+                  <li>Inject file Excel, click nút "Tải lên" tự động.</li>
+                </ul>
+              </li>
+            </ul>
+            <div class="step-tip">💡 <b>Lợi ích:</b> Trước đây phải copy thủ công 35 cột × hàng trăm HS = mất nửa ngày. Nay chỉ <b>1 cú click</b>, mất 30 giây.</div>
+            <div class="step-warn">⚠ <b>Yêu cầu:</b> Tài khoản CSDL ngành đã được Sở GD&amp;ĐT cấp. Phải đăng nhập trước khi bấm đồng bộ — Extension không lưu mật khẩu (vì lý do bảo mật).</div>
+          </div>
+        </div>
+
+        <!-- ═══ DIVIDER: DANH SÁCH CBGVNV & HỌC SINH ═══ -->
+        <div class="step-divider people">
+          <div class="sd-ico">👥</div>
+          <div class="sd-text">
+            <h3>Phần 4 · Hồ sơ CBGVNV &amp; Quản lý Học sinh</h3>
+            <p>Tra cứu danh bạ cán bộ, giáo viên, nhân viên; xem danh sách học sinh từng lớp; mở Drive hồ sơ cá nhân.</p>
+          </div>
+        </div>
+
+        <!-- Bước 9: Hồ sơ CBGVNV -->
+        <div class="step-card">
+          <div class="step-illust" style="background:linear-gradient(135deg,#fff3df,#ffe0bf)">
+            <span class="step-num" style="background:linear-gradient(135deg,#ffd28a,#ff9e6e);color:#7c2d12">9</span>
+            <svg viewBox="0 0 320 170" xmlns="http://www.w3.org/2000/svg">
+              <text x="160" y="14" font-size="9" fill="#7c2d12" text-anchor="middle" font-family="sans-serif" font-weight="bold">3 NHÓM HỒ SƠ CBGVNV</text>
+              <!-- 3 cards: BGH / GV / NV -->
+              <rect x="14" y="22" width="92" height="74" rx="10" fill="#fff" stroke="#ff9e6e" stroke-width="1.5"/>
+              <rect x="14" y="22" width="92" height="22" rx="10" fill="url(#bghGrad)"/>
+              <defs>
+                <linearGradient id="bghGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#ffd28a"/>
+                  <stop offset="100%" stop-color="#ff9e6e"/>
+                </linearGradient>
+                <linearGradient id="gvGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#7fc99d"/>
+                  <stop offset="100%" stop-color="#3fb28c"/>
+                </linearGradient>
+                <linearGradient id="nvGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#9ed8d3"/>
+                  <stop offset="100%" stop-color="#5cb0aa"/>
+                </linearGradient>
+              </defs>
+              <text x="60" y="36" font-size="14" text-anchor="middle">🛡️</text>
+              <text x="60" y="58" font-size="8" fill="#7c2d12" text-anchor="middle" font-family="sans-serif" font-weight="bold">BGH</text>
+              <text x="60" y="72" font-size="11" fill="#7c2d12" text-anchor="middle" font-family="serif" font-weight="bold">2</text>
+              <text x="60" y="86" font-size="6.5" fill="#92450c" text-anchor="middle" font-family="sans-serif">thành viên</text>
+              <rect x="114" y="22" width="92" height="74" rx="10" fill="#fff" stroke="#3fb28c" stroke-width="1.5"/>
+              <rect x="114" y="22" width="92" height="22" rx="10" fill="url(#gvGrad)"/>
+              <text x="160" y="36" font-size="14" text-anchor="middle">👩‍🏫</text>
+              <text x="160" y="58" font-size="8" fill="#1e3a3a" text-anchor="middle" font-family="sans-serif" font-weight="bold">GIÁO VIÊN</text>
+              <text x="160" y="72" font-size="11" fill="#1e6b54" text-anchor="middle" font-family="serif" font-weight="bold">36</text>
+              <text x="160" y="86" font-size="6.5" fill="#1e3a3a" text-anchor="middle" font-family="sans-serif">thành viên</text>
+              <rect x="214" y="22" width="92" height="74" rx="10" fill="#fff" stroke="#5cb0aa" stroke-width="1.5"/>
+              <rect x="214" y="22" width="92" height="22" rx="10" fill="url(#nvGrad)"/>
+              <text x="260" y="36" font-size="14" text-anchor="middle">📋</text>
+              <text x="260" y="58" font-size="8" fill="#1e3a3a" text-anchor="middle" font-family="sans-serif" font-weight="bold">NHÂN VIÊN</text>
+              <text x="260" y="72" font-size="11" fill="#1e6b54" text-anchor="middle" font-family="serif" font-weight="bold">2</text>
+              <text x="260" y="86" font-size="6.5" fill="#1e3a3a" text-anchor="middle" font-family="sans-serif">thành viên</text>
+              <!-- Drill down arrow -->
+              <text x="160" y="110" font-size="14" fill="#3fb28c" text-anchor="middle">👇</text>
+              <!-- Detail card -->
+              <rect x="60" y="118" width="200" height="44" rx="10" fill="#fff" stroke="#cfdaee"/>
+              <circle cx="80" cy="140" r="14" fill="#dbeafe"/>
+              <text x="80" y="144" font-size="11" fill="#1e40af" text-anchor="middle" font-family="serif" font-weight="bold">NA</text>
+              <text x="102" y="134" font-size="8" fill="#1e293b" font-family="sans-serif" font-weight="bold">Nguyễn Thị A</text>
+              <text x="102" y="146" font-size="6.5" fill="#6b7a72" font-family="sans-serif">Hiệu trưởng · 0912xxx</text>
+              <rect x="200" y="132" width="54" height="18" rx="9" fill="#3fb28c"/>
+              <text x="227" y="144" font-size="7" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">📂 Hồ sơ</text>
+            </svg>
+          </div>
+          <div class="step-body">
+            <h4>👨‍🏫 Hồ sơ Cán bộ - Giáo viên - Nhân viên</h4>
+            <p>Cuộn đến mục <b>"Hồ sơ CBGVNV"</b>. Có <b>3 thẻ lớn</b> đại diện 3 nhóm: <b>Ban Giám hiệu</b>, <b>Đội ngũ Giáo viên</b>, <b>Nhân viên</b>.</p>
+            <ul class="step-sublist">
+              <li>Nhấn vào <b>1 thẻ</b> → danh sách thành viên của nhóm đó hiện ra (mỗi người 1 thẻ riêng).</li>
+              <li>Nhấn vào <b>1 thẻ thành viên</b> → cửa sổ chi tiết: Họ tên, chức vụ, môn dạy, SĐT, email, ngày sinh.</li>
+              <li>Nhấn nút <b>"📂 Hồ sơ cá nhân"</b> trên cửa sổ chi tiết → Google Drive thư mục hồ sơ GV mở ra → upload tài liệu cá nhân.</li>
+              <li>Nút <b>"← Về danh mục"</b> để quay lại 3 thẻ chính.</li>
+            </ul>
+            <div class="step-tip">💡 Thông tin CBGVNV được Admin quản lý qua Google Sheet, tab <code>CBGVNV</code>. Khi cần sửa: vào Admin (đăng nhập) → sửa trên sheet → nhấn Refresh.</div>
+          </div>
+        </div>
+
+        <!-- Bước 10: Quản lý học sinh -->
         <div class="step-card">
           <div class="step-illust" style="background:linear-gradient(135deg,#1e6b54,#165844)">
-            <span class="step-num" style="background:var(--accent);color:var(--g-deep)">5</span>
-            <svg viewBox="0 0 320 150" xmlns="http://www.w3.org/2000/svg"><text x="160" y="16" font-size="9" fill="rgba(255,255,255,.9)" text-anchor="middle" font-family="sans-serif" font-weight="bold">MỤC "QUẢN LÝ HỌC SINH"</text><rect x="40" y="26" width="55" height="22" rx="11" fill="rgba(255,255,255,.1)" stroke="rgba(255,255,255,.25)"/><text x="67" y="40" font-size="7" fill="rgba(255,255,255,.7)" text-anchor="middle" font-family="sans-serif">Tất cả</text><rect x="104" y="26" width="55" height="22" rx="11" fill="#ffd66b"/><text x="131" y="40" font-size="7" fill="#1e6b54" text-anchor="middle" font-family="sans-serif" font-weight="bold">Khối 1</text><rect x="168" y="26" width="55" height="22" rx="11" fill="rgba(255,255,255,.1)" stroke="rgba(255,255,255,.25)"/><text x="195" y="40" font-size="7" fill="rgba(255,255,255,.7)" text-anchor="middle" font-family="sans-serif">Khối 2</text><rect x="232" y="26" width="55" height="22" rx="11" fill="rgba(255,255,255,.1)" stroke="rgba(255,255,255,.25)"/><text x="259" y="40" font-size="7" fill="rgba(255,255,255,.7)" text-anchor="middle" font-family="sans-serif">Khối 3</text><rect x="40" y="56" width="110" height="80" rx="10" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.15)"/><rect x="48" y="60" width="94" height="3" rx="1" fill="#ffd66b"/><text x="95" y="80" font-size="8" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">Lớp 1A</text><text x="70" y="96" font-size="14" fill="#ffd66b" font-family="serif" font-weight="bold">25</text><text x="100" y="96" font-size="14" fill="#8ec5ff" font-family="serif" font-weight="bold">12</text><text x="70" y="108" font-size="6" fill="rgba(255,255,255,.5)" font-family="sans-serif">Tổng</text><text x="100" y="108" font-size="6" fill="rgba(255,255,255,.5)" font-family="sans-serif">Nam</text><text x="95" y="128" font-size="7" fill="#ffd66b" font-family="sans-serif">Xem danh sách →</text><text x="160" y="56" font-size="18">👆</text><rect x="170" y="56" width="110" height="80" rx="10" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.15)"/><rect x="178" y="60" width="94" height="3" rx="1" fill="#ffd66b"/><text x="225" y="80" font-size="8" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">Lớp 2A</text><text x="200" y="96" font-size="14" fill="#ffd66b" font-family="serif" font-weight="bold">28</text><text x="230" y="96" font-size="14" fill="#8ec5ff" font-family="serif" font-weight="bold">15</text></svg>
+            <span class="step-num" style="background:var(--accent);color:var(--g-deep)">10</span>
+            <svg viewBox="0 0 320 170" xmlns="http://www.w3.org/2000/svg">
+              <text x="160" y="14" font-size="9" fill="rgba(255,255,255,.9)" text-anchor="middle" font-family="sans-serif" font-weight="bold">MỤC "QUẢN LÝ HỌC SINH"</text>
+              <rect x="20" y="22" width="44" height="20" rx="10" fill="rgba(255,255,255,.1)" stroke="rgba(255,255,255,.25)"/>
+              <text x="42" y="36" font-size="7" fill="rgba(255,255,255,.7)" text-anchor="middle" font-family="sans-serif">Tất cả</text>
+              <rect x="70" y="22" width="44" height="20" rx="10" fill="#ffd66b"/>
+              <text x="92" y="36" font-size="7" fill="#1e6b54" text-anchor="middle" font-family="sans-serif" font-weight="bold">Khối 1</text>
+              <rect x="120" y="22" width="44" height="20" rx="10" fill="rgba(255,255,255,.1)" stroke="rgba(255,255,255,.25)"/>
+              <text x="142" y="36" font-size="7" fill="rgba(255,255,255,.7)" text-anchor="middle" font-family="sans-serif">Khối 2</text>
+              <rect x="170" y="22" width="44" height="20" rx="10" fill="rgba(255,255,255,.1)" stroke="rgba(255,255,255,.25)"/>
+              <text x="192" y="36" font-size="7" fill="rgba(255,255,255,.7)" text-anchor="middle" font-family="sans-serif">Khối 3</text>
+              <rect x="220" y="22" width="44" height="20" rx="10" fill="rgba(255,255,255,.1)" stroke="rgba(255,255,255,.25)"/>
+              <text x="242" y="36" font-size="7" fill="rgba(255,255,255,.7)" text-anchor="middle" font-family="sans-serif">Khối 4</text>
+              <rect x="270" y="22" width="40" height="20" rx="10" fill="rgba(255,255,255,.1)" stroke="rgba(255,255,255,.25)"/>
+              <text x="290" y="36" font-size="7" fill="rgba(255,255,255,.7)" text-anchor="middle" font-family="sans-serif">Khối 5</text>
+              <rect x="34" y="52" width="120" height="86" rx="12" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.15)"/>
+              <rect x="42" y="58" width="104" height="4" rx="1" fill="#ffd66b"/>
+              <text x="94" y="80" font-size="10" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">Lớp 1A</text>
+              <text x="64" y="100" font-size="16" fill="#ffd66b" font-family="serif" font-weight="bold">25</text>
+              <text x="104" y="100" font-size="16" fill="#8ec5ff" font-family="serif" font-weight="bold">12</text>
+              <text x="64" y="112" font-size="6.5" fill="rgba(255,255,255,.6)" text-anchor="middle" font-family="sans-serif">Tổng</text>
+              <text x="104" y="112" font-size="6.5" fill="rgba(255,255,255,.6)" text-anchor="middle" font-family="sans-serif">Nam</text>
+              <text x="94" y="130" font-size="7" fill="#ffd66b" text-anchor="middle" font-family="sans-serif">Xem danh sách →</text>
+              <text x="170" y="80" font-size="20">👆</text>
+              <rect x="186" y="52" width="120" height="86" rx="12" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.15)"/>
+              <rect x="194" y="58" width="104" height="4" rx="1" fill="#ffd66b"/>
+              <text x="246" y="80" font-size="10" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">Lớp 1B</text>
+              <text x="216" y="100" font-size="16" fill="#ffd66b" font-family="serif" font-weight="bold">28</text>
+              <text x="256" y="100" font-size="16" fill="#8ec5ff" font-family="serif" font-weight="bold">15</text>
+              <text x="170" y="160" font-size="7" fill="rgba(255,255,255,.75)" text-anchor="middle" font-family="sans-serif">Click lớp → bảng học sinh: tên, ngày sinh, GT, nơi sinh, SĐT phụ huynh</text>
+            </svg>
           </div>
           <div class="step-body">
-            <h4>Xem danh sách học sinh theo khối, lớp</h4>
-            <p>Cuộn đến mục <b>"Quản lý học sinh"</b> → Chọn tab khối lớp (Khối 1 / Khối 2 / ... / Khối 5) → Nhấn vào thẻ lớp → Bảng danh sách học sinh hiện ra gồm: họ tên, ngày sinh, giới tính, nơi sinh, SĐT phụ huynh. Nhấn vào từng em để xem thêm thông tin cha mẹ, địa chỉ.</p>
+            <h4>👥 Xem danh sách học sinh theo khối, lớp</h4>
+            <p>Cuộn đến mục <b>"Quản lý học sinh"</b> → Chọn tab khối lớp (Khối 1 / Khối 2 / ... / Khối 5) → Nhấn vào thẻ lớp → Bảng danh sách học sinh hiện ra gồm: họ tên, ngày sinh, giới tính, nơi sinh, SĐT phụ huynh.</p>
+            <ul class="step-sublist">
+              <li>Nhấn vào <b>1 dòng học sinh</b> → mở chi tiết: cha mẹ, năm sinh cha mẹ, địa chỉ đầy đủ.</li>
+              <li>Trên điện thoại, mỗi học sinh hiển thị thành 1 thẻ — nhấn vào để xổ chi tiết bên dưới.</li>
+              <li>Ô tìm kiếm phía trên: gõ tên HS hoặc tên cha/mẹ để tìm nhanh trong lớp.</li>
+            </ul>
+            <div class="step-tip">💡 Để <b>thêm / sửa / chuyển lớp / tiếp nhận HS chuyển trường</b>: vào Admin → tab <b>"👥 Quản lý HS"</b>. Hỗ trợ import Excel hàng loạt đầu năm.</div>
           </div>
         </div>
 
-        <!-- Bước 6: Hồ sơ CBGVNV -->
-        <div class="step-card">
-          <div class="step-illust" style="background:linear-gradient(135deg,#f0f4ff,#dae7ff)">
-            <span class="step-num">6</span>
-            <svg viewBox="0 0 320 150" xmlns="http://www.w3.org/2000/svg"><text x="160" y="16" font-size="9" fill="#3858a8" text-anchor="middle" font-family="sans-serif" font-weight="bold">MỤC "HỒ SƠ CBGVNV"</text><rect x="30" y="26" width="120" height="110" rx="12" fill="#fff" stroke="#d8e0dc"/><rect x="30" y="26" width="120" height="35" rx="12" fill="#3fb28c"/><circle cx="90" cy="64" r="16" fill="#fff" stroke="#d8e0dc"/><text x="90" y="69" font-size="9" text-anchor="middle" fill="#2d8a6e" font-family="serif" font-weight="bold">NA</text><text x="90" y="88" font-size="8" text-anchor="middle" fill="#142a23" font-family="sans-serif" font-weight="bold">Nguyễn Thị A</text><text x="90" y="100" font-size="6" text-anchor="middle" fill="#6b7a72" font-family="sans-serif">Hiệu trưởng</text><rect x="56" y="108" width="68" height="18" rx="9" fill="#3fb28c"/><text x="90" y="120" font-size="7" fill="#fff" text-anchor="middle" font-family="sans-serif">📂 Hồ sơ cá nhân</text><text x="180" y="50" font-size="28">👆</text><text x="160" y="85" font-size="8" fill="#3858a8" font-family="sans-serif">Nhấn "Hồ sơ cá nhân"</text><text x="160" y="100" font-size="14">⬇️</text><rect x="160" y="108" width="140" height="30" rx="8" fill="#fff" stroke="#4285f4"/><rect x="160" y="108" width="140" height="14" rx="8" fill="#4285f4"/><text x="230" y="118" font-size="7" fill="#fff" text-anchor="middle" font-family="sans-serif">📁 Drive → Tải tệp lên</text><text x="230" y="133" font-size="7" fill="#4285f4" text-anchor="middle" font-family="sans-serif" font-weight="bold">+ Tải hồ sơ GV lên đây</text></svg>
-          </div>
-          <div class="step-body">
-            <h4>Xem & đưa Hồ sơ CBGVNV</h4>
-            <p>Cuộn đến mục <b>"Hồ sơ CBGVNV"</b> → Lọc theo nhóm (Ban giám hiệu / Giáo viên / Nhân viên) → Nhấn <b>"📂 Hồ sơ cá nhân"</b> → Google Drive mở ra → Nhấn <b>"+ Tải tệp lên"</b> để đưa hồ sơ giáo viên lên. Cách làm giống hệt mục Hồ sơ số.</p>
+        <!-- ═══ DIVIDER: MẸO SỬ DỤNG ═══ -->
+        <div class="step-divider">
+          <div class="sd-ico">💡</div>
+          <div class="sd-text">
+            <h3>Phần 5 · Mẹo sử dụng</h3>
+            <p>Tận dụng tốt nhất hệ thống trên mọi thiết bị.</p>
           </div>
         </div>
 
-        <!-- Bước 7: Điện thoại -->
-        <div class="step-card">
+        <!-- Bước 11: Điện thoại -->
+        <div class="step-card full">
           <div class="step-illust" style="background:linear-gradient(135deg,#fff8e1,#fff0c8)">
-            <span class="step-num">7</span>
-            <svg viewBox="0 0 320 150" xmlns="http://www.w3.org/2000/svg"><rect x="120" y="5" width="80" height="140" rx="14" fill="#fff" stroke="#d8e0dc" stroke-width="2"/><rect x="120" y="5" width="80" height="24" rx="14" fill="#2d8a6e"/><text x="138" y="20" font-size="8" fill="#fff" font-family="sans-serif">📚</text><rect x="180" y="14" width="12" height="8" rx="2" fill="rgba(255,255,255,.3)"/><text x="186" y="21" font-size="7" fill="#fff" text-anchor="middle">☰</text><rect x="128" y="36" width="64" height="6" rx="3" fill="#eef2ef"/><rect x="128" y="48" width="28" height="22" rx="5" fill="#d6ecdb"/><text x="142" y="62" font-size="9" text-anchor="middle">🏫</text><rect x="162" y="48" width="28" height="22" rx="5" fill="#fff0d1"/><text x="176" y="62" font-size="9" text-anchor="middle">👩‍🏫</text><rect x="128" y="76" width="64" height="6" rx="3" fill="#eef2ef"/><rect x="128" y="88" width="64" height="18" rx="4" fill="#fff" stroke="#d8e0dc"/><rect x="132" y="92" width="4" height="4" rx="2" fill="#3fb28c"/><rect x="140" y="93" width="30" height="3" rx="1" fill="#eef2ef"/><rect x="128" y="110" width="64" height="18" rx="4" fill="#fff" stroke="#d8e0dc"/><rect x="132" y="114" width="4" height="4" rx="2" fill="#cbd3cf"/><rect x="140" y="115" width="25" height="3" rx="1" fill="#eef2ef"/><text x="260" y="55" font-size="9" fill="#8a6d00" font-family="sans-serif" font-weight="bold">📱 Trên</text><text x="260" y="70" font-size="9" fill="#8a6d00" font-family="sans-serif" font-weight="bold">điện thoại</text><text x="260" y="95" font-size="8" fill="#6b7a72" font-family="sans-serif">Giao diện tự</text><text x="260" y="108" font-size="8" fill="#6b7a72" font-family="sans-serif">điều chỉnh</text><text x="260" y="121" font-size="8" fill="#6b7a72" font-family="sans-serif">cho màn nhỏ</text></svg>
+            <span class="step-num" style="background:#d4a843;color:#7c5e00">11</span>
+            <svg viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg">
+              <!-- Điện thoại -->
+              <rect x="40" y="14" width="100" height="160" rx="16" fill="#fff" stroke="#d8e0dc" stroke-width="2"/>
+              <rect x="40" y="14" width="100" height="28" rx="16" fill="#1e6b54"/>
+              <text x="62" y="32" font-size="9" fill="#fff" font-family="sans-serif">📚 HSS</text>
+              <rect x="118" y="22" width="14" height="10" rx="3" fill="rgba(255,255,255,.25)"/>
+              <text x="125" y="30" font-size="8" fill="#fff" text-anchor="middle">☰</text>
+              <rect x="50" y="50" width="80" height="8" rx="3" fill="#eef2ef"/>
+              <rect x="50" y="64" width="36" height="28" rx="6" fill="#d6ecdb"/>
+              <text x="68" y="82" font-size="11" text-anchor="middle">🏫</text>
+              <rect x="92" y="64" width="36" height="28" rx="6" fill="#fff0d1"/>
+              <text x="110" y="82" font-size="11" text-anchor="middle">👩‍🏫</text>
+              <rect x="50" y="98" width="80" height="8" rx="3" fill="#eef2ef"/>
+              <rect x="50" y="112" width="80" height="22" rx="6" fill="#fff" stroke="#d8e0dc"/>
+              <rect x="56" y="118" width="5" height="5" rx="2.5" fill="#3fb28c"/>
+              <text x="66" y="125" font-size="6.5" fill="#1e293b" font-family="sans-serif">1.2.1.1 QĐ TĐ-KT</text>
+              <rect x="108" y="118" width="18" height="9" rx="4" fill="#3fb28c"/>
+              <text x="117" y="125" font-size="6" fill="#fff" text-anchor="middle" font-family="sans-serif">Mở</text>
+              <rect x="50" y="140" width="80" height="22" rx="6" fill="#fff" stroke="#d8e0dc"/>
+              <rect x="56" y="146" width="5" height="5" rx="2.5" fill="#cbd3cf"/>
+              <text x="66" y="153" font-size="6.5" fill="#1e293b" font-family="sans-serif">1.2.1.2 BB họp</text>
+              <!-- Sidebar menu mobile -->
+              <rect x="160" y="14" width="160" height="160" rx="12" fill="#fff" stroke="#d8e0dc" stroke-width="1.5"/>
+              <rect x="160" y="14" width="160" height="24" rx="12" fill="#1e6b54"/>
+              <text x="240" y="30" font-size="9" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">☰ Menu thu gọn</text>
+              <rect x="172" y="46" width="136" height="16" rx="6" fill="#f5f7fb"/>
+              <text x="180" y="57" font-size="7.5" fill="#1e293b" font-family="sans-serif">🏠 Trang chủ</text>
+              <rect x="172" y="66" width="136" height="16" rx="6" fill="#fff3df"/>
+              <text x="180" y="77" font-size="7.5" fill="#1e293b" font-family="sans-serif">📋 Hồ sơ số</text>
+              <rect x="172" y="86" width="136" height="16" rx="6" fill="#dbe9ff"/>
+              <text x="180" y="97" font-size="7.5" fill="#1a4466" font-family="sans-serif">🏅 KĐCL-TĐG</text>
+              <rect x="172" y="106" width="136" height="16" rx="6" fill="#b8d4fb"/>
+              <text x="180" y="117" font-size="7.5" fill="#1a4466" font-family="sans-serif" font-weight="bold">📊 QL Chất lượng</text>
+              <rect x="172" y="126" width="136" height="16" rx="6" fill="#dcfce7"/>
+              <text x="180" y="137" font-size="7.5" fill="#1e293b" font-family="sans-serif">👨‍🏫 Hồ sơ CBGVNV</text>
+              <rect x="172" y="146" width="136" height="16" rx="6" fill="#fef3c7"/>
+              <text x="180" y="157" font-size="7.5" fill="#1e293b" font-family="sans-serif">👥 Quản lý HS</text>
+              <!-- Right: list bullets -->
+              <text x="346" y="34" font-size="10" fill="#7c5e00" font-family="sans-serif" font-weight="bold">📱 Trên điện thoại:</text>
+              <text x="346" y="56" font-size="9" fill="#1e293b" font-family="sans-serif">✓ Giao diện tự điều chỉnh</text>
+              <text x="346" y="74" font-size="9" fill="#1e293b" font-family="sans-serif">✓ Menu thu gọn vào nút ☰</text>
+              <text x="346" y="92" font-size="9" fill="#1e293b" font-family="sans-serif">✓ Bảng HS thành thẻ xếp dọc</text>
+              <text x="346" y="110" font-size="9" fill="#1e293b" font-family="sans-serif">✓ Mở Drive bằng app Drive</text>
+              <text x="346" y="128" font-size="9" fill="#1e293b" font-family="sans-serif">✓ Nhập điểm QLCL được</text>
+              <text x="346" y="146" font-size="9" fill="#1e293b" font-family="sans-serif">✓ Xuất học bạ Word đc</text>
+              <text x="346" y="170" font-size="7.5" fill="#92450c" font-family="sans-serif" font-style="italic">⚡ Hoạt động 100% như máy tính</text>
+            </svg>
           </div>
           <div class="step-body">
-            <h4>Xem trên điện thoại</h4>
-            <p>Mở link trang web trên điện thoại → Giao diện tự điều chỉnh cho màn hình nhỏ. Nhấn <b>☰</b> góc phải để mở menu. Mọi thao tác (xem hồ sơ, mở Drive, tải tệp) đều hoạt động bình thường trên điện thoại.</p>
+            <h4>📱 Xem trên điện thoại — tương thích 100%</h4>
+            <p>Mở link trang web trên điện thoại → Giao diện <b>tự điều chỉnh</b> cho màn hình nhỏ. Mọi thao tác hoạt động bình thường.</p>
+            <ul class="step-sublist">
+              <li>Thanh menu thu gọn thành nút <b>☰</b> ở góc phải. Nhấn để mở menu dạng cột trượt từ phải qua.</li>
+              <li>Các thẻ lớp / CBGVNV xếp <b>1 cột</b> thay vì lưới — dễ chạm hơn.</li>
+              <li>Bảng danh sách học sinh chuyển thành <b>thẻ xếp dọc</b> — nhấn vào để xổ chi tiết.</li>
+              <li>Nhấn nút <b>"Mở"</b> trên 1 hồ sơ → mở thẳng vào app Google Drive (không qua trình duyệt).</li>
+              <li><b>QLCL trên điện thoại:</b> Vẫn có thể nhập điểm, nhận xét, xuất học bạ Word. Tuy nhiên màn hình nhỏ nên khuyến khích GV nhập điểm trên máy tính/máy tính bảng cho nhanh.</li>
+            </ul>
+            <div class="step-tip">📲 <b>Thêm vào màn hình chính:</b> Trên Chrome / Safari → menu ⋮ → "Thêm vào màn hình chính" → biểu tượng Hồ sơ số sẽ xuất hiện như một app riêng, mở trực tiếp không cần gõ URL.</div>
           </div>
         </div>
 
@@ -7154,6 +7648,6 @@ else boot();
 
 
 <!-- ⭐ Logic JS chính — tách ra để cache hiệu quả + dễ maintain (Refactor 2026-05-05) -->
-<script src="app.js?v=2026.05.10-cbgv-landing" defer></script>
+<script src="app.js?v=2026.05.11-guide-qlcl-mobile" defer></script>
 </body>
 </html>

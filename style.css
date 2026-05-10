@@ -1044,9 +1044,28 @@
   @keyframes teacherFadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
   @media(max-width:900px){.teacher-landing{grid-template-columns:1fr;gap:16px;margin-top:20px}
     .teacher-hero{min-height:220px;padding:28px 22px 24px}
+    .teacher-hero::before{height:100px}
     .teacher-hero .th-ico{width:64px;height:64px;font-size:32px;border-radius:18px}
     .teacher-hero .th-name{font-size:1.25rem}
+    .teacher-hero .th-count{top:18px;right:18px;padding:6px 12px}
     .teacher-hero .th-count b{font-size:1.3rem}}
+  /* 2026-05-11: tinh chỉnh thêm cho điện thoại — tránh overflow + tăng tương phản */
+  @media(max-width:600px){.teacher-landing{margin-top:16px;gap:14px;padding:0 4vw}
+    .teacher-hero{min-height:auto;padding:24px 20px 22px;border-radius:20px}
+    .teacher-hero::before{height:88px}
+    .teacher-hero .th-ico{width:56px;height:56px;font-size:28px;border-radius:16px;margin-bottom:10px}
+    .teacher-hero .th-count{top:14px;right:14px;padding:5px 10px;border-radius:12px}
+    .teacher-hero .th-count b{font-size:1.15rem}
+    .teacher-hero .th-count span{font-size:.62rem}
+    .teacher-hero .th-name{font-size:1.18rem;margin:6px 0 4px}
+    .teacher-hero .th-sub{font-size:.86rem;margin-bottom:8px}
+    .teacher-hero .th-desc{font-size:.84rem;margin-bottom:14px}
+    .teacher-hero .th-cta{font-size:.9rem}}
+  @media(max-width:380px){.teacher-hero{padding:20px 16px 18px}
+    .teacher-hero .th-ico{width:50px;height:50px;font-size:25px}
+    .teacher-hero .th-name{font-size:1.08rem}
+    .teacher-hero .th-count{padding:4px 8px}
+    .teacher-hero .th-count b{font-size:1.05rem}}
   .role-filter{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:30px 0 40px}
   .role-chip{padding:10px 22px;border-radius:999px;border:1px solid #d8e0dc;background:white;font-family:inherit;font-size:.85rem;cursor:pointer;color:#5a6b64;transition:all .2s}
   .role-chip.active{background:var(--g-deep);color:white;border-color:var(--g-deep)}
@@ -1143,7 +1162,7 @@
   .step-card:hover{box-shadow:0 20px 40px -20px rgba(30,107,84,.18);transform:translateY(-3px)}
   .step-card.full{grid-column:1/-1}
   .step-illust{background:linear-gradient(135deg,#eaf5ef,#d6ecdb);padding:24px;min-height:180px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-  .step-illust svg{max-width:100%;height:auto}
+  .step-illust svg{max-width:100%;width:100%;height:auto;display:block}
   .step-num{position:absolute;top:14px;left:14px;width:32px;height:32px;border-radius:50%;background:var(--g2);color:white;display:grid;place-items:center;font-family:'Fraunces',serif;font-size:.9rem;font-weight:700;box-shadow:0 4px 12px rgba(45,138,110,.3)}
   .step-body{padding:22px}
   .step-body h4{font-family:'Fraunces',serif;font-size:1.05rem;color:var(--g-deep);margin-bottom:8px}
@@ -1160,6 +1179,28 @@
   .faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease;color:#5a6b64;font-size:.9rem;line-height:1.7}
   .faq-item.open .faq-a{max-height:500px}
   .faq-a-inner{padding:0 26px 22px 62px}
+  /* 2026-05-11: Section divider trong step-grid để chia nhóm bước theo từng hệ thống */
+  .step-divider{grid-column:1/-1;display:flex;align-items:center;gap:16px;margin:14px 0 6px;padding:14px 22px;background:linear-gradient(135deg,#eaf5ef,#d9ead3);border-radius:16px;border-left:5px solid var(--g2);box-shadow:0 2px 8px -4px rgba(30,107,84,.2)}
+  .step-divider .sd-ico{font-size:1.6rem;flex-shrink:0;width:44px;height:44px;background:white;border-radius:12px;display:grid;place-items:center;box-shadow:0 3px 10px -2px rgba(30,107,84,.18)}
+  .step-divider .sd-text{flex:1;min-width:0}
+  .step-divider .sd-text h3{font-family:'Fraunces',serif;font-size:1.18rem;color:var(--g-deep);font-weight:700;margin:0;line-height:1.2;letter-spacing:-.01em}
+  .step-divider .sd-text p{font-size:.82rem;color:#5a6b64;margin:3px 0 0;line-height:1.45}
+  .step-divider.qlcl{background:linear-gradient(135deg,#dbe9ff,#bbd4fc);border-left-color:#2d6e9a}
+  .step-divider.qlcl .sd-text h3{color:#1a4466}
+  .step-divider.kdcl{background:linear-gradient(135deg,#e3f2fd,#c8e0f7);border-left-color:#2d6e9a}
+  .step-divider.kdcl .sd-text h3{color:#1a4466}
+  .step-divider.people{background:linear-gradient(135deg,#fef3c7,#fde68a);border-left-color:#d4a843}
+  .step-divider.people .sd-text h3{color:#7c5e00}
+  @media(max-width:600px){.step-divider{padding:12px 16px;gap:12px;border-radius:12px}.step-divider .sd-ico{width:38px;height:38px;font-size:1.3rem;border-radius:10px}.step-divider .sd-text h3{font-size:1.02rem}.step-divider .sd-text p{font-size:.76rem}}
+  /* QLCL accent badge cho step-card */
+  .step-card.qlcl-step .step-illust{background:linear-gradient(135deg,#dbe9ff,#a9d7f0)}
+  .step-card.qlcl-step .step-num{background:linear-gradient(135deg,#3d7fbe,#1a4466);color:#fff}
+  /* Bước sub-list bullet cho QLCL */
+  .step-body .step-sublist{padding-left:18px;margin:8px 0 10px;color:#3a4a42;font-size:.85rem;line-height:1.65}
+  .step-body .step-sublist li{margin-bottom:4px}
+  .step-body .step-sublist b{color:var(--g-deep)}
+  .step-body .step-warn{margin-top:10px;padding:9px 14px;background:#fef3c7;border-radius:10px;font-size:.78rem;color:#7c4a00;border:1px solid #fde68a}
+  .step-body .step-warn b{color:#7c2d12}
   @media(max-width:700px){.step-grid{grid-template-columns:1fr}.step-illust{min-height:140px;padding:18px}.step-body{padding:18px}.step-body h4{font-size:.95rem}}
 
   .locate{padding:80px 6vw;background:white}
