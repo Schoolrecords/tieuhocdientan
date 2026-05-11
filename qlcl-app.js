@@ -547,6 +547,8 @@ function loginOK(isGuestMode){
   }
   // ⭐ 2026-05-08: đồng bộ mọi nơi hiển thị kỳ ngay khi loginOK (init + sau login)
   if(typeof _updatePeriodUI==='function') _updatePeriodUI();
+  // 2026-05-11: prefetch chữ ký + tên HT (từ DSGV) — fire-and-forget, để export sync dùng cache
+  if(!isGuestNow && typeof _ensureSigList === 'function') { try { _ensureSigList(); } catch(e){} }
   // 2026-05-10 stale-while-revalidate:
   //   1) Có cache (kể cả expired) → dùng ngay → render UI tức thì → refresh ngầm nếu cũ
   //   2) Không có cache → bật skeleton → initApp → gọi API → khi xong updateAll
@@ -3122,7 +3124,8 @@ function expTKXL(){
 
   // ── Chữ ký ──
   R++;
-  var ht=localStorage.getItem('hieu_truong')||'';
+  // 2026-05-11: HT đọc từ DSGV qua _sigList (đã prefetch sau loginOK)
+  var ht=(_sigList && _sigList.ht && _sigList.ht.hoTen)||'';
   _rptSet(ws,R,0,'',{}); _rptSet(ws,R,8,(_rptXa() ? _rptXa().replace(/^Xã\s+/i,'')+', ' : '')+_rptDate(),_rptS(_RPT.sign));
   for(var i=9;i<COLS;i++) _rptSet(ws,R,i,'',{});
   _rptMerge(ws,R,8,R,COLS-1);
@@ -3585,8 +3588,9 @@ function _buildHocBaData(s){
   var xa = _rptXa() || '';
   var tinh = _rptTinh() || '';
   var nam_hoc = (window.HSS_CFG && window.HSS_CFG.schoolYear) || '2025-2026';
-  // Hiệu trưởng: ưu tiên localStorage (set qua Admin → Thông tin trường) → rỗng
-  var ht = localStorage.getItem('hieu_truong') || '';
+  // 2026-05-11: Tên HT đọc từ DSGV (cột Chức vụ) qua _sigList — cache từ _ensureSigList().
+  // _genHocBaDocx() đã await _ensureSigList() trước khi gọi _buildHocBaData, nên _sigList sẵn.
+  var ht = (_sigList && _sigList.ht && _sigList.ht.hoTen) || '';
   // 2026-05-08: GVCN lookup theo lớp HS
   // Ưu tiên: nx.gvcn (admin nhập riêng) → allUsers.find(lop_phu_trach) → ''
   var gvcn = nx.gvcn || '';
@@ -3838,6 +3842,8 @@ async function _genHocBaDocx(s){
   if (typeof window.docxtemplater === 'undefined') throw new Error('Thiếu thư viện docxtemplater — kiểm tra CDN');
 
   await _ensureAllUsers();
+  // 2026-05-11: cần _sigList sẵn TRƯỚC _buildHocBaData để có tên HT (đọc từ DSGV qua server)
+  await _ensureSigList();
 
   var khoi = parseInt(s.khoi) || 1;
   if (khoi < 1 || khoi > 5) khoi = 1;
@@ -3917,7 +3923,8 @@ function _renderHocBa1HS(s, showCover){
   // 2026-05-07: Cải cách hành chính 2 cấp — bỏ huyện. Chỉ còn xã + tỉnh.
   var xa=_rptXa()||'', tinh=_rptTinh()||'';
   var namHoc=(window.HSS_CFG && window.HSS_CFG.schoolYear)||'2025-2026';
-  var ht=localStorage.getItem('hieu_truong')||'';
+  // 2026-05-11: HT đọc từ DSGV qua _sigList (đã prefetch sau loginOK)
+  var ht=(_sigList && _sigList.ht && _sigList.ht.hoTen)||'';
   var gvcn=nx.gvcn||'';
   var now=new Date();
   var dateStr=xa+', ngày '+now.getDate()+' tháng '+(now.getMonth()+1)+' năm '+now.getFullYear();
@@ -4302,7 +4309,8 @@ function expBangCLWord(){
   var school=_rptSchool();
   var addr=_rptDiaChi();
   var periodName=_rptPeriodName();
-  var ht=localStorage.getItem('hieu_truong')||'';
+  // 2026-05-11: HT đọc từ DSGV qua _sigList (đã prefetch sau loginOK)
+  var ht=(_sigList && _sigList.ht && _sigList.ht.hoTen)||'';
   var now=new Date();
   var dateStr='ngày '+now.getDate()+' tháng '+(now.getMonth()+1)+' năm '+now.getFullYear();
   var lopSet={};allS.forEach(function(s){lopSet[s.lop]=1;});var lops=Object.keys(lopSet).sort();

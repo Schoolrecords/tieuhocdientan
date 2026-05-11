@@ -4529,12 +4529,28 @@ function _getSignatures_() {
   const cfg = _getCfgMap_();
   const out = {
     namHoc: cfg.NAM_HOC || '',
-    ht:  { fileId: cfg.CHUKY_HT_FILE_ID    || '', url: '' },
+    ht:  { fileId: cfg.CHUKY_HT_FILE_ID    || '', url: '', hoTen: '' },
     dau: { fileId: cfg.DAU_TRUONG_FILE_ID  || '', url: '' },
     gvcn: []
   };
   if (out.ht.fileId)  try { out.ht.url  = DriveApp.getFileById(out.ht.fileId).getUrl(); } catch (e) {}
   if (out.dau.fileId) try { out.dau.url = DriveApp.getFileById(out.dau.fileId).getUrl(); } catch (e) {}
+
+  // 2026-05-11: Lookup tên Hiệu trưởng từ DSGV (cột D = Chức vụ).
+  // Tìm row có "hiệu trưởng" và KHÔNG có "phó" → loại Phó Hiệu trưởng.
+  try {
+    const dsgv = _getSS().getSheetByName(SHEET_DSGV);
+    if (dsgv && dsgv.getLastRow() >= 2) {
+      const dRows = dsgv.getRange(2, 1, dsgv.getLastRow() - 1, 4).getValues();
+      for (let i = 0; i < dRows.length; i++) {
+        const cv = String(dRows[i][3] || '').toLowerCase();
+        if (cv.indexOf('hiệu trưởng') >= 0 && cv.indexOf('phó') < 0) {
+          out.ht.hoTen = String(dRows[i][1] || '').trim();
+          break;
+        }
+      }
+    }
+  } catch (e) { /* DSGV chưa có hoặc lỗi đọc — htHoTen rỗng */ }
 
   const sh = _getSS().getSheetByName(SHEET_QT_USERS);
   if (!sh || sh.getLastRow() < 2) return out;
